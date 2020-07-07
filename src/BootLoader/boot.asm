@@ -226,7 +226,7 @@ Get_Value_From_FAT_Tab:
 
 Get_Value:
 	mov bx, [BPB_BytesPerSec]
-	xor dx, dx ; 注意这里一定要对dx置零，因为下一条除法指令是16位的，默认dx是高16位，ax是低16位，而上面的运算完成后，dx=1，那么接下来的除法就会出错
+	xor dx, dx ; 注意这里一定要对dx置零，因为下一条除法指令是16位的，默认dx是高16位，ax是低16位，而上面的运算完成后，如果dx=1，那么接下来的除法就会出错
 	div bx 
 	; 除以每扇区的字节数，余数是相对一个扇区的字节偏移位置，商是FAT12表的第几个扇区
 	add ax, sector_num_of_FAT1_start ; ax 保存商 
