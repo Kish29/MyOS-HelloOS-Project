@@ -4,5 +4,12 @@
 
 >本项目的学习基于图书《一个64位操作系统的设计与实现》来进行研究于学习。需要有一定的汇编代码基础以及相应的硬件基础、C语言能力。废话不多说，这里将会记录学习的日期以及进度等等。
 
-### HelloOS v0.0.1
+### HelloOS v0.0.1  2020.7.6~2020.7.7
   1. bximage 创建虚拟磁盘，选择软盘
+  2. nasm 编译boot.asm为bin文件
+  3. dd 拷贝boot.bin到第一个扇区 
+  4. mount 挂载boot.img文件，并加上-o loop参数，使其描述为磁盘格式
+  5. cp loader.bin 到boot.img 中，操作系统会为根据这个文件的文件系统格式进行相应的信息录入
+  6. bochs -f .bochsrc 启动bochs虚拟机（记得提前配置好.bochsrc）
+
+写完boot.asm程序，从FAT12的文件系统格式从读入loader程序到内存的指定位置
