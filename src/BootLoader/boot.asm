@@ -60,8 +60,8 @@ BootStart:
 
 ; AH->13h show boot message 
 	mov ax, 1301h 
-	mov bx, 000dh ; bh = page num, bl = 8-bits ---> glitter-br-bg-bb-highlith-fr-fg-fb(b->background, f->font)
-	mov dx, 001eh ; dh = row num, dl = column num 
+	mov bx, 0fh ; bh = page num, bl = 8-bits ---> glitter-br-bg-bb-highlith-fr-fg-fb(b->background, f->font)
+	mov dx, 0000h ; dh = row num, dl = column num 
 	mov cx, boot_message_length
 	mov bp, boot_message ; bp = extend address of the string , es = basic address of the string 
 	int 10h 
@@ -146,7 +146,7 @@ Loader_Have_Not_Found:
 	mov bx, 008ch ; red and glitter string 
 	mov bp, no_loader_found_message 
 	mov cx, no_loader_found_message_length 
-	mov dx, 011ch 
+	mov dx, 0100h
 	mov ax, 1301h
 	int 10h
 	jmp $
@@ -154,10 +154,10 @@ Loader_Have_Not_Found:
 Show_Loader_Found:
 	mov ax, ds 
 	mov es, ax 
-	mov bx, 0002h 
+	mov bx, 0fh 
 	mov bp, loader_found_message 
 	mov cx, loader_found_message_length 
-	mov dx, 0121h 
+	mov dx, 0100h
 	mov ax, 1301h
 	int 10h
 
@@ -185,13 +185,24 @@ Set_Loader_Address:
 	; 设置完成，返回ax的簇号信息
 	pop ax 
 Get_Info_From_FAT_Tab:
+	; 用‘.’的显示数量来反映loader程序占用的簇大小
+	push ax 
+	push bx 
+	mov ah, 09h 
+	mov al, '.' ; 要显示的字符
+	mov bx, 0fh
+	mov cx, 1
+	int 10h
+	pop bx 
+	pop ax
+
 	; 暂存簇号,用来调用获取FAT表信息函数
 	push ax 
 	; 这个簇号用来读扇区,要加上root的扇区数量和平衡数
 	add ax, sector_of_root_dir 
 	add ax, sector_balance 
 	mov cx, 1
-	call Read_One_Sector 
+	call Read_One_Sector ; 读入一个扇区的数据到内存中
 
 	pop ax 
 	call Get_Value_From_FAT_Tab 
@@ -316,13 +327,13 @@ FAT12_index_odd_or_even:			db		 0 ;初始化为0,表示为偶数
 
 ;=====================================display messages START =========================================
 ; display messages
-boot_message:						db		'Start Booting......'
+boot_message:						db		'Start Booting'
 boot_message_length					equ		($ - boot_message)
 
 no_loader_found_message:			db		'ERROR: NO LOADER FOUND!'
 no_loader_found_message_length		equ		($ - no_loader_found_message) 
 
-loader_found_message:				db		'Loader Found!'
+loader_found_message:				db		'Reading Loader'
 loader_found_message_length			equ		($ - loader_found_message) 
 
 ;=====================================display messages END ============================================
