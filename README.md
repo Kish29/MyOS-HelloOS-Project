@@ -14,3 +14,7 @@
   6. bochs -f .bochsrc 启动bochs虚拟机（记得提前配置好.bochsrc）
 
 写完boot.asm程序，从FAT12的文件系统格式从读入loader程序到内存的指定位置
+
+### HelloOS v0.0.2 <font size=2><u>2020.7.18</u></font>
+1. 暂时把loader的小功能实现了一下，明天继续更新
+
