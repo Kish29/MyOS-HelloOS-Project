@@ -1,14 +1,14 @@
-demo=loader.bin boot.bin kernel.bin 
+demo=loader.bin # kernel.bin # boot.bin
 
 all: $(demo) 
 loader.bin: loader.asm
 	nasm loader.asm -o loader.bin
 
-boot.bin: boot.asm 
-	nasm boot.asm -o boot.bin 
+# boot.bin: boot.asm 
+#	nasm boot.asm -o boot.bin 
 
-kernel.bin: kernel.asm 
-	nasm kernel.asm -o kernel.bin 
+# kernel.bin: kernel.asm 
+# 	nasm kernel.asm -o kernel.bin 
 
 .PHONY:clean
 

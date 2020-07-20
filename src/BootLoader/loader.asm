@@ -197,8 +197,10 @@ Power_off_When_Erro_Occur:
 	int 16h
 	
 	; 显示一下用户的输入
+	; 显示的字符串在al中
 	mov ah, 0eh 
 	xor bx, bx 
+	; 字符属性
 	mov bl, 0ch
 	int 10h
 
@@ -392,7 +394,8 @@ Get_Memory_Struct_Succeed:
 
 	pop es
 
-;=========获取SVGA图像信息=========
+;=========获取VBE 控制器信息=========
+; VBE 提供统一的(S)VGA接口
 	call Set_Message_Row 
 	
 	push es 
@@ -407,21 +410,39 @@ Get_Memory_Struct_Succeed:
 
 	pop es 
 	
-	; 设置缓冲区
+	; 设置缓冲区 
+	; 4f00号查询功能返回的信息将保存在这个缓冲区当中
+	; 通过00号功能获取VedioModeList指针
 	mov ax, 0
 	mov es, ax 
 	mov di, 0x8000 
-	; 4f00中断
+	; ah=4f是VBE统一的主功能号
+	; al=00获取VBE控制器信息
 	mov ax, 4f00h
-	int 10
+	int 10h
 	; 返回值 
-	; al = 4fh 支持4f00h中断
+	; al = 4fh 支持4f00h中断(返回值就是调用的主功能号)
 	; ah = 00h(成功)，01（失败）
 	cmp ax, 004fh 
 	jz Get_SVGA_Info_Succeed
 
 ; =========读取失败==========
+Get_SVGA_Info_Failed:
+	call Set_Message_Row 
+
+	push es 
+	mov ax, 0x1000 
+	mov es, ax 
+
 	mov ax, 1301h
+	mov bx, 000fh 
+	mov cx, get_svga_info__fail_length 
+	mov bp, get_svga_info_fail 
+	int 10h
+
+	pop es 
+	
+	jmp Power_off_When_Erro_Occur
 
 Get_SVGA_Info_Succeed:
 	call Set_Message_Row 
@@ -437,17 +458,281 @@ Get_SVGA_Info_Succeed:
 	int 10h
 
 	pop es 
+
+;=======显示resolution提示字符串在屏幕的第12行=========
+Show_Resolution_Hint_Message:
+	push gs 
+	push di 
+	push si 
+	push cx 
+
+	mov ax, 0xb800 
+	mov gs, ax 
+	
+	mov si, resolution_hint_message 
+	mov di, 0x6e0 ; 屏幕的第12行（以11行为索引计算）
+
+	mov cx, resolution_hint_message_length
+.show_hint_message:
+	mov ah, 0xf 
+	mov al, [ds:si] ; 缺省时，默认ds寄存器
+	mov word [gs:di], ax
+	inc si 
+	; 注意di是加2，不是自增！
+	add di, 2 
+	
+	loop .show_hint_message
+	
+	pop cx 
+	pop si 
+	pop di 
+	pop gs
+
+; 获取VBE模式信息
+;======显示开始获取 VBE 模式信息=========
+	call Set_Message_Row 
+
+	push es 
+	mov ax, 0x1000 
+	mov es, ax 
+
+	mov ax, 1301h
+	mov bx, 000fh 
+	mov cx, get_svga_mode_message_length 
+	mov bp, get_svga_mode_message 
+	int 10h 
+
+	pop es 
+
+;=========获取查询的VBE缓冲区中偏移14个字节处的VedioModeList指针
+;=========并预先设置4f01h功能好查询模式的缓冲区地址
+	mov ax, 0 
+	mov es, ax 
+	mov si, 0x800e 
+
+	mov esi, dword [es:si] 
+	; 预先设置4f01号功能的ModeInfoBlock缓冲区
+	; 01号每次查询结果数据块大小256B，与下面的0x100也是对应的
+	mov edi, 0x8200 
+
+Get_SVGA_Mode:
+;=========首先显示模式索引============
+	; 通过VedioModeList指针,获取VBE模式的信息，并打印在屏幕上
+	mov cx, word [es:esi]
+
+;==========显示SVGA的信息=======
+
+	push ax 
+	
+	mov ax, 0
+	; 先显示高位在屏幕上（按照逻辑也是如此）
+	mov al, ch 
+	call Display_AL 
+
+	mov ax, 0 
+	mov al, cl 
+	call Display_AL 
+
+	pop ax 
+
+;=======如果cx当前值是ffffh，表示是最后一个模式或者没有模式支持，其他值表示存在可能还有下一个模式
+;=======那么esi偏移2B获得下一个显示模式
+	cmp cx, 0xffff 
+	jz Get_SVGA_Mode_Finish 
+
+;=========然后显示分辨率=======
+Show_resolution:
+	;=====先显示一个“:”符号
+	mov al, ':'
+	call Display_AL_Char
+
+	; 先查询当前显示模式保存的信息
+	mov ax, 4f01h
+	int 10h
+
+	cmp ax, 004fh 
+	jnz Get_SVGA_Mode_Failed
+
+	; svga模式加1
+	; add byte [svga_mode_num], 1
+
+	; 显示分辨率 =====注意只有VBE 1.2以上的版本才有分辨率=====
+	; 分辨率大小各占2B
+	; 18B处的x轴分辨率, 20B处的y轴分辨率
+;=====X轴：
+	; 注意，小段法cpu低位数据在低地址！
+	xor ax, ax 
+	mov al, byte [es:edi+19]
+	call Display_AL 
+
+	xor ax, ax 
+	mov al, byte [es:edi+18]
+	call Display_AL 
+
+;=====显示 ‘x’ 号
+	mov al, 'x'
+	call Display_AL_Char 
+
+;=====Y轴：
+	xor ax, ax 
+	mov al, byte [es:edi+21]
+	call Display_AL
+
+	xor ax, ax 
+	mov al, byte [es:edi+20]
+	call Display_AL
+
+;=====显示 '-' 号
+	mov al, '-'
+	call Display_AL_Char
+
+	add esi, 2
+	add edi, 0x100 
+
+	jmp Get_SVGA_Mode
+
+Get_SVGA_Mode_Failed:
+	call Set_Message_Row 
+
+	push es 
+	mov ax, 0x1000  
+	mov es, ax 
+
+	mov ax, 1301h 
+	mov bx, 000fh 
+	mov cx, get_svga_mode_fail_length 
+	mov bp, get_svga_mode_fail 
+	int 10h
+
+	pop es
+
+	jmp Power_off_When_Erro_Occur
+
+
+;======获取VBE模式信息结束=======
+Get_SVGA_Mode_Finish:
+	call Set_Message_Row 
+
+	push es 
+	mov ax, 0x1000  
+	mov es, ax 
+
+	mov ax, 1301h 
+	mov bx, 000fh 
+	mov cx, get_svga_mode_succeed_length 
+	mov bp, get_svga_mode_succeed 
+	int 10h
+
+	pop es
+
+;==================          ;======根据用户选择设置svga模式=======
+;==================          	; 获取用户输入
+;==================          	;mov ax, 0
+;==================          	;int 16h
+;==================          
+;==================          	;cmp al, 0
+;==================          	;jl Power_off_When_Erro_Occur 
+;==================          	;cmp al, byte [svga_mode_num]
+;==================          	;ja Power_off_When_Erro_Occur
+;==================          
+;==================          ;====== 设置SVGA模式
+;==================          ;====== 通过功能号4f02h实现
+;==================          
+;==================          ;获得用户选择的功能号
+;==================          	; 高位先置零
+;==================          	; and ax, 0x00ff  
+;根据用户的选择模式现在实现还比较困难，以后再说
+	
+
+;=======按任意键继续======
+	call Set_Message_Row 
+
+	push es 
+	mov ax, 0x1000 
+	mov es, ax 
+
+	mov ax, 1301h 
+	mov bx, 000fh 
+	mov cx, press_key_to_continue_length 
+	mov bp, press_key_to_continue 
+	int 10h 
+
+	pop es
+
+	mov ax, 0
+	int 16h
+
+;=========设置显示分辨率=====
+	mov ax, 4f02h 
+	mov bx, 0x4177 ; 1280x768 4B像素
+	int 10h ; 设置显示模式
+
+	cmp ax, 004fh 
+	jnz Set_SVGA_Mode_Failed
+
+;========注意，设置VBE显示模式后，使用线性地址的帧缓存，那么必须在32位或者63位运行模式下进行字符串的输出 调用BIOS的10h中断不再管用=====
+;========           ;=======显示成功信息=====
+;========           Show_Set_SVGA_Succeed:
+;========           	push es 
+;========           	mov ax, 0x1000 
+;========           	mov es, ax 
+;========           
+;========           	mov ax, 1301h 
+;========           	mov bx, 000fh 
+;========           	mov dx, 0000h
+;========           	mov cx, set_svga_mode_succeed_length 
+;========           	mov bp, set_svga_mode_succeed 
+;========           	int 10h 
+;========           
+;========           	pop es 
+	jmp short Init_GDT_32Mode
+
+;设置SVGA模式失败
+Set_SVGA_Mode_Failed:
+	call Set_Message_Row 
+	
+	push es 
+	mov ax, 0x1000 
+	mov es, ax 
+
+	mov ax, 1301h 
+	mov bx, 000fh 
+	mov cx, set_svga_mode_fail_length 
+	mov bp, set_svga_mode_fail
+	int 10h
+
+	pop es 
+
+	jmp Power_off_When_Erro_Occur
+
+
+
+
+
+;===============接下来是进入32位保护模式=================
+Init_GDT_32Mode:
+	;开启保护模式!
+	cli			;====关闭外中断 
+
+	db 0x66 
+	lgdt [gdt_pointer]
+
+;========控制寄存器只能在0特权级下操作===================
+	mov eax, cr0 
+	mov eax, 1
+	mov cr0, eax 
+
+	; 注意这里要使用跳转指令跳转过来，而不是直接往下运行
+;================段选择子index:断类偏移======== 
+	jmp dword selector_code_32:GO_TO_TMP_32_Protect
+
+GO_TO_TMP_32_Protect:
 	jmp $
-
-
-
-
-
 
 
 [SECTION .s16lib]
 [BITS 16]
-;================================FAT12表信息解析函数，传入ax（簇号）返回对应簇号保存的信息==============
+;================================fat12表信息解析函数，传入ax（簇号）返回对应簇号保存的信息==============
 Get_Value_From_FAT_Tab:
 	push es 
 	push bx 
@@ -491,14 +776,32 @@ Index_Even:
 	pop es 
 	ret 
 
+; ======== 传入ax参数，显示al的数据到屏幕上
 Display_AL:
 	push ecx 
 	push edx 
 	push edi
-	push gs 
+	push gs
+
+	push ax 
+	;push bx 
 
 	mov ax, 0xb800 
-	mov gs, ax
+	mov gs, ax 
+	
+	; ====显示第几号模式====
+	; mov ah, 0xe 
+	; mov al, [svga_mode_index]
+	; xor bx, bx 
+	; mov bl, 0xf ;白色
+	; int 10h
+
+	; ;序号加1
+	; add byte [svga_mode_index], 1
+
+	; pop bx 
+	pop ax 
+
 	mov edi, [display_position]
 	mov ah, 0xf 
 	mov dl, al 
@@ -531,6 +834,27 @@ Display_AL:
 	pop ecx 
 
 	ret 
+
+;显示al的特殊字符
+Display_AL_Char:
+	push edi
+	push gs 
+	
+	push ax 
+	mov ax, 0xb800 
+	mov gs, ax 
+	pop ax 
+
+	mov ah, 0xf 
+	mov edi, dword [display_position]
+	mov word [gs:edi], ax 
+	add edi, 2 
+	mov dword [display_position], edi
+
+	pop gs 
+	pop edi 
+
+	ret
 
 ;=====================================FAT12表信息解析函数 END ==========================================
 ;========================================FAT12表信息获取部分 END ===========================================
@@ -620,7 +944,12 @@ FAT12_index_odd_or_even:			db		 0 ;初始化为0,表示为偶数
 ; 该变量保存kernel的读取偏移位置
 offset_of_kernel_count:				dd		 offset_of_kernel 
 
-display_position:					dd		 0x100
+display_position:					dd		 0x780 ; 显示在屏幕的第13行(索引为12行换算得来)
+
+; svga_mode_index:					db		 '0'
+
+; 保存svga模式的总数
+; svga_mode_num:						db		 0
 ;======================================================================================================
 
 
@@ -634,7 +963,7 @@ power_off_meassge_length				equ		$ - power_off_meassge
 no_kernel_found_mesaage:				db		'No OS_SYSTEM found!'
 no_kernel_found_mesaage_length:			equ		$ - no_kernel_found_mesaage
 
-kernel_load_complete_message:			db		'Load Kernel Complete!'
+kernel_load_complete_message:			db		'Loading Kernel Complete!'
 kernel_load_complete_message_length		equ		$ - kernel_load_complete_message
 
 get_memory_struct_message:				db		'Getting memory struct...'
@@ -663,3 +992,16 @@ get_svga_mode_fail_length				equ		$ - get_svga_mode_fail
 
 get_svga_mode_succeed:					db		'Get SVGA VBE mode information successful!'
 get_svga_mode_succeed_length			equ		$ - get_svga_mode_succeed 
+
+; set_svga_mode_succeed:					db		'Setting SVGA mode... OK!'
+; set_svga_mode_succeed_length			equ		$ - set_svga_mode_succeed
+
+set_svga_mode_fail:						db		'Set SVGA mode failed!'
+set_svga_mode_fail_length				equ		$ - set_svga_mode_fail
+
+press_key_to_continue:					db		'Basic initialize finished! Press any key to continue->'
+press_key_to_continue_length			equ		$ - press_key_to_continue
+
+resolution_hint_message:				db		'All resolutions HERE:'
+resolution_hint_message_length			equ		$ - resolution_hint_message 
+
