@@ -15,23 +15,40 @@ offset_of_temp_kernel_file				 equ	0x7e00
 ; 读取完kernel后，0x7e00作为物理内存结构信息的缓冲保存区域
 memory_struct_buffer_addr				 equ	0x7e00 
 
+;===========================32位全局描述符表GDT_32==================
 ; 伪指令，定义一个名字为gdt的数据段 
 ; 全局描述符表
-[SECTION gdt]
+[SECTION gdt_32]
 
 ; 每个描述符64位
-LABEL_GDT:					dd	0, 0 ; 起始处为NULL
+LABEL_GDT_32:				dd	0, 0 ; 起始处为NULL
 LABEL_DESC_CODE32:			dd	0x0000FFFF, 0x00CF9A00 
 LABEL_DESC_DATA32:			dd	0x0000FFFF, 0x00CF9200 
 
-gdt_length					equ	$ - LABEL_GDT 
+gdt_length_32				equ	$ - LABEL_GDT_32 
 ; gdt的48位伪描述符指针
-gdt_pointer					dw	gdt_length - 1 ; 16位长度
-							dd	LABEL_GDT ; 32位基地址
+gdt_pointer_32				dw	gdt_length_32 - 1 ; 16位长度
+							dd	LABEL_GDT_32 ; 32位基地址
 
 ; 段选择子index
-selector_code_32			equ LABEL_DESC_CODE32 - LABEL_GDT 
-selector_data_32			equ LABEL_DESC_DATA32 - LABEL_GDT 
+selector_code_32			equ LABEL_DESC_CODE32 - LABEL_GDT_32 
+selector_data_32			equ LABEL_DESC_DATA32 - LABEL_GDT_32 
+;===================================================================
+
+
+;===========================64位全局描述符表GDT_64==================
+[SECTION gdt_64]
+LABEL_GDT_64:				dq	0
+LABEL_DESC_CODE64:			dq	0x0020980000000000 ; 非一致性、应用程序不可读（只能执行）、未访问
+LABEL_DESC_DATA64:			dq	0x0000920000000000
+
+gdt_length_64				equ $ - LABEL_GDT_64
+gdt_pointer_64				dw	gdt_length_64 - 1
+							dd	LABEL_GDT_64 
+
+selector_code_64			equ	LABEL_DESC_CODE64 - LABEL_GDT_64 
+selector_data_64			equ	LABEL_DESC_DATA64 - LABEL_GDT_64
+;====================================================================
 
 [SECTION .s16]
 ; 伪指令，告诉编译器该段的代码运行在16位的处理器上
@@ -87,7 +104,7 @@ Load_Start:
 	cli ; 关闭外中断
 
 	db	  0x66 ; 使用32位数据指令前加前缀0x66 
-	lgdt  [gdt_pointer] ; 将数据加载到GDTR寄存器中
+	lgdt  [gdt_pointer_32] ; 将数据加载到GDTR寄存器中
 	
 	; 置位CR0.PE位，开启保护模式
 	mov eax, cr0 
@@ -715,7 +732,7 @@ Init_GDT_32Mode:
 	cli			;====关闭外中断 
 
 	db 0x66 
-	lgdt [gdt_pointer]
+	lgdt [gdt_pointer_32]
 
 ;========控制寄存器只能在0特权级下操作===================
 	mov eax, cr0 
@@ -725,9 +742,147 @@ Init_GDT_32Mode:
 	; 注意这里要使用跳转指令跳转过来，而不是直接往下运行
 ;================段选择子index:断类偏移======== 
 	jmp dword selector_code_32:GO_TO_TMP_32_Protect
+;====执行完这条远跳转指令后，处理器进入了32位的保护模式==========
 
+
+;====接下来马上准备进入64位的IA-32e模式（也叫长模式）=============
+;================接下来是在32位保护模式运行下的32位宽代码部分 ~^_^~ ===========
+[SECTION .s32]
+[BITS 32]
 GO_TO_TMP_32_Protect:
-	jmp $
+;===============要准备进入临时的长模式=============
+
+;===============设置32位模式下的数据段选择子===========
+	mov ax, selector_data_32 
+	mov ds, ax 
+	mov fs, ax 
+	mov es, ax 
+	mov ss, ax 
+	mov esp, 0x7e00 ;0x7e00向上保存了物理地址内存的空间结构
+
+	;查询是否支持长模式
+	call Query_Support_Long_Mode
+	test ax, ax 
+
+	jz	Power_off_When_Erro_Occur
+
+
+	;查询是否支持MSR寄存器组
+	call Query_Support_MSR
+
+	test ax, ax 
+	jz Power_off_When_Erro_Occur
+;=============注意这两个查询函数要在对数据段寄存器ds赋上IA-32e模式的64位数据段描诉符号前前进行查询========
+;=============因为在没有进入IA-32e，却又对段寄存器赋值了IA-32e的描述符后，32位保护模式下，发现===========
+;=============段描述符的长度均为0，所以会抛出异常=======================
+
+;==============在物理地址0x90000处初始化页表项=============
+;============用户模式页表项============
+	mov dword	[0x90000], 0x91007 ;7-> 用户模式、可读写、存在
+	mov dword	[0x90004], 0x00000 ;页表项0
+
+	mov dword	[0x90800], 0x91007 
+	mov dword	[0x90804], 0x00000 ;页表项1
+
+	mov dword	[0x91000], 0x92007 
+	mov dword	[0x91004], 0x00000 ;页表项2
+
+;============超级模式页表项============
+	mov dword	[0x92000], 0x00083 ; 83-> 超级模式、可读写、存在
+	mov dword	[0x92004], 0x00000 ;页表项3
+
+	mov dword	[0x92008], 0x20083 
+	mov dword	[0x9200c], 0x00000 ;页表项4
+
+	mov dword	[0x92010], 0x40083 
+	mov dword	[0x92014], 0x00000 ;页表项5
+
+	mov dword	[0x92018], 0x60083 
+	mov dword	[0x9201c], 0x00000 ;页表项6
+
+	mov dword	[0x92020], 0x80083 
+	mov dword	[0x92024], 0x00000 ;页表项7
+
+	mov dword	[0x92028], 0xa0083 
+	mov dword	[0x9202c], 0x00000 ;页表项8
+
+;===============加载64位GDTD表=========
+	lgdt	[gdt_pointer_64]
+
+;=====初始化64位数据段=====
+	mov ax, selector_data_64
+	mov ds, ax 
+	mov es, ax 
+	mov fs, ax 
+	mov gs, ax 
+	mov ss, ax 
+
+	mov esp, 0x7e00 
+
+
+;====标准步骤进入IA-32e模式====
+;1.复位cr0.PG, 关闭分页管理，以加载64位的页表项（之前未开启，跳过这一步）
+
+;2.置位cr4.PAE，开启物理地址拓展
+	mov eax, cr4 
+	bts eax, 5	; bit test and set 现将eax第5位复制给CF寄存器,然后eax第5位置1
+	mov cr4, eax 
+
+;3.加载64位页目录(顶层页表PML4)的物理基地址在cr3中(这里是临时的页目录)
+	mov eax, 0x90000 
+	mov cr3, eax 
+
+;4.置位MSR寄存器组的IA32_EFER寄存器第8位LME，开启IA-32e模式 
+;=====MSR寄存器组通过地址访问，使用rdmsr置零访问由ecx指定的寄存器====
+	mov ecx, 0xc0000080 
+	rdmsr 
+	;读入数据到edx:eax 
+
+;=====访问成功后，被访问的MSR寄存器会将它的高32位->edx的底32位中
+;==========================================底32位->eax的底32位中
+	bts eax, 8
+	wrmsr
+	;将edx:eax数据写入到被访问的MSR寄存器中
+
+;5.置位cr0.PG开启分页管理，此时处理器自动置位IA32_EFER的第10位(LMA位：IA32e激活状态指示位)
+	mov eax, cr0 
+	bts eax, 31 
+	mov cr0, eax
+
+;6.远跳转指令，真正进入IA-32e模式，处理权交给内核
+	jmp dword selector_code_64:offset_of_kernel
+;;===========处理器运行在IA-32e模式下的三个条件（前提是已经进入了保护模式）:
+;;========== 1-> cr0.PG 置位 
+;;========== 2-> IA32-EFER.LME 置位 
+;;========== 3-> cr4.PAE 置位 
+;;====在IA-32e模式下，当试图改变其中任意一个标志，都不会通过处理器的一致性检测，抛出异常====
+
+Query_Support_Long_Mode:
+	;======查询功能号======
+	mov eax, 0x80000000 
+	cpuid 
+	
+	cmp eax, 0x80000001 
+	setnb	al ; 如果eax大于等于0x80000001则al置为1，否则为0
+	jb	.query_finish
+	
+	mov eax, 0x80000001 
+	cpuid 
+	bt	edx, 29	;将edx的第29位复制到CF标志位
+	setc	al	;如果CF为1，设置al为1，否则为0
+
+.query_finish:
+	movzx eax, al 
+	ret 
+
+Query_Support_MSR:
+	mov ax, 1
+	cpuid 
+
+	bt edx, 5
+	setc	al
+	
+	ret
 
 
 [SECTION .s16lib]
