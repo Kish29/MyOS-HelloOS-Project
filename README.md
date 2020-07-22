@@ -39,3 +39,7 @@
 ### HelloOS v0.0.4  <font size=2><u>2020.7.20</u></font>
 1. 处理器切换到IA-32e模式
 2. 处理器控制器转交给内核程序
+
+### HelloOS v0.0.5  <font size=2><u>2020.7.22</u></font>
+1. 写完内核头程序head.S，重新定义了GDT、IDT、64位页表等
+2. 排除了存在于loader中的惊天BUG，该BUG导致kernel程序无法完整地加载到指定内存

@@ -188,10 +188,10 @@ Get_Info_From_FAT_Tab:
 	; 用‘.’的显示数量来反映loader程序占用的簇大小
 	push ax 
 	push bx 
-	mov ah, 09h 
+	; 注意使用e号功能，09号也可以显示，但是光标不会下移
+	mov ah, 0eh 
 	mov al, '.' ; 要显示的字符
 	mov bx, 0fh
-	mov cx, 1
 	int 10h
 	pop bx 
 	pop ax

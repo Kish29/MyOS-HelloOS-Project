@@ -256,10 +256,9 @@ Get_Info_From_FAT_Tab:
 	; 用‘.’的显示数量来反映kernel程序占用的簇大小
 	push ax 
 	push bx 
-	mov ah, 09h 
+	mov ah, 0eh 
 	mov al, '.' ; 要显示的字符
 	mov bx, 000fh
-	mov cx, 1
 	int 10h
 	pop bx 
 	pop ax
@@ -317,7 +316,11 @@ Move_Kernel:
 	call Get_Value_From_FAT_Tab 
 	cmp ax, 0fffh ; 判断是否是最后一个簇
 	je Kernel_has_been_loaded 
-	add bx, [BPB_BytesPerSec] ; kernel缓冲区再加一个扇区的数据大小
+	; add bx, [BPB_BytesPerSec] ; kernel缓冲区再加一个扇区的数据大小
+;!!!!!!!!!!!!!!!!!!! 这句话必须注释掉，因为每次esi都是从offset_of_temp_kernel_file处拿数据!!!!!!!!!!!!!
+;!!!!!!!!!!!!!!!!!!! 而offset_of_temp_kernel_file这个地址没有加512B操作，没有变!!!!!!!!!!!!!!!!!!!!!!!!
+;!!!!!!!!!!!!!!!!!!! 如果bx加512B的话，将拿不到kernel的数据!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;!!!!!!!!!!!!!!!!!!! 妈的，调试了一晚上，以为是kernel出现了问题，没想到是loader!!!!!!!!!!!!!!!!!!!!!!!!
 	jmp short Get_Info_From_FAT_Tab 
 
 Kernel_has_been_loaded:
@@ -487,7 +490,7 @@ Show_Resolution_Hint_Message:
 	mov gs, ax 
 	
 	mov si, resolution_hint_message 
-	mov di, 0x6e0 ; 屏幕的第12行（以11行为索引计算）
+	mov di, 0x780 ; 屏幕的第13行（以12行为索引计算）
 
 	mov cx, resolution_hint_message_length
 .show_hint_message:
@@ -1099,7 +1102,7 @@ FAT12_index_odd_or_even:			db		 0 ;初始化为0,表示为偶数
 ; 该变量保存kernel的读取偏移位置
 offset_of_kernel_count:				dd		 offset_of_kernel 
 
-display_position:					dd		 0x780 ; 显示在屏幕的第13行(索引为12行换算得来)
+display_position:					dd		 0x820 ; 显示在屏幕的第14行(索引为13行换算得来)
 
 ; svga_mode_index:					db		 '0'
 
