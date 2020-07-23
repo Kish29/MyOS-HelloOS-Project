@@ -68,7 +68,7 @@ Load_Start:
 	call Set_Message_Row 
 
     mov ax, 1301h
-    mov bx, 000fh
+    mov bx, 0007h
     mov cx, start_load_message_length
     mov bp, start_load_message
     int 10h
@@ -188,7 +188,7 @@ Kernel_Not_Found:
 	call Set_Message_Row
 
 	mov ax, 1301h
-    mov bx, 000fh
+    mov bx, 000ch
     mov cx, no_kernel_found_mesaage_length 
     mov bp, no_kernel_found_mesaage
     int 10h
@@ -328,10 +328,29 @@ Kernel_has_been_loaded:
 	mov ax, 0x1000 
 	mov es, ax 
 
-	call Set_Message_Row
+	; 清空屏幕, 重置光标位置
+	push dx 
+
+	; 清屏 
+	mov ax, 0600h
+	mov bx, 0700h ; 注意，bh是清屏后屏幕显示字符的属性，相当于全局范围的定义，在一些没有定义字符属性的中断现实中，这个起到了作用
+	; 7 -> 0111 白色，不高亮
+	mov cx, 0
+	mov dx, 184fh 
+	int 10h
+	
+	; 重置光标 
+	mov ax, 0200h
+	mov bx, 0 
+	mov dx, 0
+	int 10h 
+
+	pop dx
+	
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
+	mov dx, 0000h
 	mov cx, kernel_load_complete_message_length 
 	mov bp, kernel_load_complete_message 
 	int 10h
@@ -356,7 +375,7 @@ Kill_Motor:
 	call Set_Message_Row
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_memory_struct_message_length 
 	mov bp, get_memory_struct_message 
 	int 10h 
@@ -407,7 +426,7 @@ Get_Memory_Struct_Succeed:
 	mov es, ax 
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx,	get_memory_struct_succeed_length 
 	mov bp, get_memory_struct_succeed 
 	int 10h
@@ -423,7 +442,7 @@ Get_Memory_Struct_Succeed:
 	mov es, ax 
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_svga_info_message_length 
 	mov bp, get_svga_info_message 
 	int 10h
@@ -455,7 +474,7 @@ Get_SVGA_Info_Failed:
 	mov es, ax 
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_svga_info__fail_length 
 	mov bp, get_svga_info_fail 
 	int 10h
@@ -472,7 +491,7 @@ Get_SVGA_Info_Succeed:
 	mov es, ax 
 
 	mov ax, 1301h 
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_svga_info_succeed_length 
 	mov bp, get_svga_info_succeed 
 	int 10h
@@ -517,7 +536,7 @@ Show_Resolution_Hint_Message:
 	mov es, ax 
 
 	mov ax, 1301h
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_svga_mode_message_length 
 	mov bp, get_svga_mode_message 
 	int 10h 
@@ -619,7 +638,7 @@ Get_SVGA_Mode_Failed:
 	mov es, ax 
 
 	mov ax, 1301h 
-	mov bx, 000fh 
+	mov bx, 000ch 
 	mov cx, get_svga_mode_fail_length 
 	mov bp, get_svga_mode_fail 
 	int 10h
@@ -638,7 +657,7 @@ Get_SVGA_Mode_Finish:
 	mov es, ax 
 
 	mov ax, 1301h 
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, get_svga_mode_succeed_length 
 	mov bp, get_svga_mode_succeed 
 	int 10h
@@ -672,7 +691,7 @@ Get_SVGA_Mode_Finish:
 	mov es, ax 
 
 	mov ax, 1301h 
-	mov bx, 000fh 
+	mov bx, 0007h 
 	mov cx, press_key_to_continue_length 
 	mov bp, press_key_to_continue 
 	int 10h 
@@ -716,7 +735,7 @@ Set_SVGA_Mode_Failed:
 	mov es, ax 
 
 	mov ax, 1301h 
-	mov bx, 000fh 
+	mov bx, 000ch 
 	mov cx, set_svga_mode_fail_length 
 	mov bp, set_svga_mode_fail
 	int 10h

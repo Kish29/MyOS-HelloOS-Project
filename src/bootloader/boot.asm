@@ -44,13 +44,16 @@ BootStart:
 
 ; invoke BIOS interrupt No.10h -------> AH->(06h) clear screen 
 	mov ax, 0600h 
-	mov bx, 0700h 
+	mov bx, 0700h ; 注意，bh是清屏后屏幕显示字符的属性，相当于全局范围的定义，在一些没有定义字符属性的中断现实中，这个起到了作用
+	; 7 -> 0111 白色，不高亮
+
 	mov cx, 0
 	mov dx, 184fh ; 这儿是最右下角坐标
 	int 10h
 ; al=0 ->crear screen 
 ; (ch, cl) = 窗口左上角位置(Y, X)
 ; (dh, dl) = 窗口右下角位置(Y, X)
+; cx + dx相当用作用范围
 
 ; set cursor focus AH->02h 
 	mov ax, 0200h
@@ -60,7 +63,7 @@ BootStart:
 
 ; AH->13h show boot message 
 	mov ax, 1301h 
-	mov bx, 0fh ; bh = page num, bl = 8-bits ---> glitter-br-bg-bb-highlith-fr-fg-fb(b->background, f->font)
+	mov bx, 07h ; bh = page num, bl = 8-bits ---> glitter-br-bg-bb-highlith-fr-fg-fb(b->background, f->font)
 	mov dx, 0000h ; dh = row num, dl = column num 
 	mov cx, boot_message_length
 	mov bp, boot_message ; bp = extend address of the string , es = basic address of the string 
@@ -154,7 +157,7 @@ Loader_Have_Not_Found:
 Show_Loader_Found:
 	mov ax, ds 
 	mov es, ax 
-	mov bx, 0fh 
+	mov bx, 07h 
 	mov bp, loader_found_message 
 	mov cx, loader_found_message_length 
 	mov dx, 0100h

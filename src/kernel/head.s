@@ -70,7 +70,7 @@ entry64:
  lretq
 
 go_to_kernel:
- .quad Start_Kernel
+ .quad _init_kernel
 
 
 
@@ -105,6 +105,9 @@ __PDE:
  .quad 0x400083
  .quad 0x600083
  .quad 0x800083
+
+
+
 
 
 
