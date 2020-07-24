@@ -19,41 +19,41 @@
 00000000000i[      ]   Sound support: no
 00000000000i[      ]   USB support: UHCI
 00000000000i[      ]   VGA extension support: vbe voodoo
-00000000000i[MEM0  ] allocated memory at 0x7f5d56adc010. after alignment, vector=0x7f5d56add000
+00000000000i[MEM0  ] allocated memory at 0x7f6dda4ec010. after alignment, vector=0x7f6dda4ed000
 00000000000i[MEM0  ] 2048.00MB
 00000000000i[MEM0  ] mem block size = 0x00020000, blocks=16384
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('/usr/local/share/bochs/BIOS-bochs-latest')
-00000000000i[      ] lt_dlhandle is 0x55ae1e8731f0
+00000000000i[      ] lt_dlhandle is 0x55ac41cef1f0
 00000000000i[PLUGIN] loaded plugin libbx_hdimage.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e8739a0
+00000000000i[      ] lt_dlhandle is 0x55ac41cef9a0
 00000000000i[PLUGIN] loaded plugin libbx_pci.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e874440
+00000000000i[      ] lt_dlhandle is 0x55ac41cf0440
 00000000000i[PLUGIN] loaded plugin libbx_pci2isa.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e874bd0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf0bd0
 00000000000i[PLUGIN] loaded plugin libbx_usb_uhci.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e8773b0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf33b0
 00000000000i[PLUGIN] loaded plugin libbx_acpi.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e877ee0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf3ee0
 00000000000i[PLUGIN] loaded plugin libbx_hpet.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e878d50
+00000000000i[      ] lt_dlhandle is 0x55ac41cf4d50
 00000000000i[PLUGIN] loaded plugin libbx_cmos.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e8796c0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf56c0
 00000000000i[PLUGIN] loaded plugin libbx_dma.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87a110
+00000000000i[      ] lt_dlhandle is 0x55ac41cf6110
 00000000000i[PLUGIN] loaded plugin libbx_pic.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87a900
+00000000000i[      ] lt_dlhandle is 0x55ac41cf6900
 00000000000i[PLUGIN] loaded plugin libbx_pit.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87b300
+00000000000i[      ] lt_dlhandle is 0x55ac41cf7300
 00000000000i[PLUGIN] loaded plugin libbx_vga.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87bb60
+00000000000i[      ] lt_dlhandle is 0x55ac41cf7b60
 00000000000i[PLUGIN] loaded plugin libbx_floppy.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87c6a0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf86a0
 00000000000i[PLUGIN] loaded plugin libbx_ioapic.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87cfc0
+00000000000i[      ] lt_dlhandle is 0x55ac41cf8fc0
 00000000000i[PLUGIN] loaded plugin libbx_keyboard.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87d930
+00000000000i[      ] lt_dlhandle is 0x55ac41cf9930
 00000000000i[PLUGIN] loaded plugin libbx_harddrv.so
-00000000000i[      ] lt_dlhandle is 0x55ae1e87fb20
+00000000000i[      ] lt_dlhandle is 0x55ac41cfbb20
 00000000000i[PLUGIN] loaded plugin libbx_pci_ide.so
 00000000000i[PLUGIN] init_dev of 'pci' plugin device by virtual method
 00000000000i[DEV   ] i440FX PMC present at device 0, function 0
@@ -61,7 +61,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Thu Jul 23 03:06:47 2020 (time0=1595491607)
+00000000000i[CMOS  ] Setting initial clock to: Fri Jul 24 16:42:34 2020 (time0=1595626954)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -293,1002 +293,157 @@
 00002049527i[BXVGA ] VBE known Display Interface b0c5
 00002052170i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
 00004575251i[BIOS  ] Booting from 0000:7c00
-00007564900i[XGUI  ] charmap update. Font is 9 x 16
-00084443867d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084443880d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084446113d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084446126d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084448370d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084448383d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084450638d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084450651d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084452917d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084452930d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084455207d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084455220d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084457508d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084457521d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084459820d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084459833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084462143d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084462156d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084464477d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084464490d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084466822d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084466835d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084469178d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084469191d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084471545d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084471558d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084473923d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084473936d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084476312d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084476325d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084478712d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084478725d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084481123d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084481136d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084483545d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084483558d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084485978d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084485991d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084488422d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084488435d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084490877d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084490890d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084493343d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084493356d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084495820d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084495833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084498352d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084498365d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084500895d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084500908d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084503449d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084503462d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084506014d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084506027d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084508590d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084508603d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084511177d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084511190d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084513775d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084513788d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084516395d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084516408d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084519026d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084519039d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084521668d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084521681d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084524321d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084524334d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084526985d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084526998d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084529660d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084529673d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084532346d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084532359d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084535043d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084535056d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084537751d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084537764d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084540470d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084540483d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084543200d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084543213d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084545941d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084545954d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084548693d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084548706d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084551456d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084551469d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084554230d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084554243d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084557015d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084557028d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084559811d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084559824d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084562618d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084562631d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084565436d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084565449d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084568265d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084568278d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084571105d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084571118d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084573956d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084573969d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084576818d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084576831d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084579757d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084579770d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084582707d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084582720d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084585668d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084585681d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084588640d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084588653d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084591623d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084591636d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084594617d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00084594630d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00097600000e[XGUI  ] xkeypress(): keysym ffeb unhandled!
-00322413710i[BXVGA ] VBE set bpp (32)
-00322413732i[BXVGA ] VBE set xres (1280)
-00322413771i[BXVGA ] VBE set yres (768)
-00322413809i[BXVGA ] VBE enabling x 1280, y 768, bpp 32, 3932160 bytes visible
-00908900000i[XGUI  ] system RESET callback
-00908900000i[SYS   ] bx_pc_system_c::Reset(HARDWARE) called
-00908900000i[CPU0  ] cpu hardware reset
-00908900000i[APIC0 ] allocate APIC id=0 (MMIO enabled) to 0x0000fee00000
-00908900000i[CPU0  ] CPU[0] is the bootstrap processor
-00908900000i[CPU0  ] CPUID[0x00000000]: 0000000d 756e6547 6c65746e 49656e69
-00908900000i[CPU0  ] CPUID[0x00000001]: 0001067a 00010800 0408e3fd bfebfbff
-00908900000i[CPU0  ] CPUID[0x00000002]: 05b0b101 005657f0 00000000 2cb4304e
-00908900000i[CPU0  ] CPUID[0x00000003]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x00000004]: 04000121 01c0003f 0000003f 00000001
-00908900000i[CPU0  ] CPUID[0x00000005]: 00000040 00000040 00000003 03122220
-00908900000i[CPU0  ] CPUID[0x00000006]: 00000003 00000002 00000003 00000000
-00908900000i[CPU0  ] CPUID[0x00000007]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x00000008]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x00000009]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] WARNING: Architectural Performance Monitoring is not implemented
-00908900000i[CPU0  ] CPUID[0x0000000a]: 07280202 00000000 00000000 00000503
-00908900000i[CPU0  ] CPUID[0x0000000b]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x0000000c]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x0000000d]: 00000003 00000240 00000240 00000000
-00908900000i[CPU0  ] CPUID[0x80000000]: 80000008 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x80000001]: 00000000 00000000 00000001 20100000
-00908900000i[CPU0  ] CPUID[0x80000002]: 65746e49 2952286c 726f4320 4d542865
-00908900000i[CPU0  ] CPUID[0x80000003]: 44203229 43206f75 20205550 54202020
-00908900000i[CPU0  ] CPUID[0x80000004]: 30303639 20402020 30382e32 007a4847
-00908900000i[CPU0  ] CPUID[0x80000005]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x80000006]: 00000000 00000000 18008040 00000000
-00908900000i[CPU0  ] CPUID[0x80000007]: 00000000 00000000 00000000 00000000
-00908900000i[CPU0  ] CPUID[0x80000008]: 00003028 00000000 00000000 00000000
-00908900000i[CPU0  ] CPU Features supported:
-00908900000i[CPU0  ] 		x87
-00908900000i[CPU0  ] 		486ni
-00908900000i[CPU0  ] 		pentium_ni
-00908900000i[CPU0  ] 		p6ni
-00908900000i[CPU0  ] 		mmx
-00908900000i[CPU0  ] 		debugext
-00908900000i[CPU0  ] 		vme
-00908900000i[CPU0  ] 		pse
-00908900000i[CPU0  ] 		pae
-00908900000i[CPU0  ] 		pge
-00908900000i[CPU0  ] 		pse36
-00908900000i[CPU0  ] 		mtrr
-00908900000i[CPU0  ] 		pat
-00908900000i[CPU0  ] 		sysenter_sysexit
-00908900000i[CPU0  ] 		clflush
-00908900000i[CPU0  ] 		sse
-00908900000i[CPU0  ] 		sse2
-00908900000i[CPU0  ] 		sse3
-00908900000i[CPU0  ] 		ssse3
-00908900000i[CPU0  ] 		sse4_1
-00908900000i[CPU0  ] 		mwait
-00908900000i[CPU0  ] 		vmx
-00908900000i[CPU0  ] 		smx
-00908900000i[CPU0  ] 		longmode
-00908900000i[CPU0  ] 		lm_lahf_sahf
-00908900000i[CPU0  ] 		nx
-00908900000i[CPU0  ] 		cmpxhg16b
-00908900000i[CPU0  ] 		xsave
-00908900000i[CPU0  ] 		xapic
-00908900000i[PLUGIN] reset of 'pci' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'pci2isa' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'cmos' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'dma' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'pic' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'pit' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'vga' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'floppy' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'acpi' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'hpet' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'ioapic' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'keyboard' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'harddrv' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'pci_ide' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'biosdev' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'speaker' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'extfpuirq' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'parallel' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'serial' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'iodebug' plugin device by virtual method
-00908900000i[PLUGIN] reset of 'usb_uhci' plugin device by virtual method
-00908904662i[BIOS  ] $Revision: 13752 $ $Date: 2019-12-30 14:16:18 +0100 (Mon, 30 Dec 2019) $
-00909237559i[KBD   ] reset-disable command received
-00909263326i[BIOS  ] Starting rombios32
-00909263764i[BIOS  ] Shutdown flag 0
-00909264363i[BIOS  ] ram_size=0x80000000
-00909264829i[BIOS  ] ram_end=2048MB
-00909760186i[BIOS  ] Found 1 cpu(s)
-00909773838i[BIOS  ] bios_table_addr: 0x000f9db8 end=0x000fcc00
-00909773878d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00909773884d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00909773909d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00909773915d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00909773955d[PCI   ] read  PCI register 0x59 value 0x00 (len=1)
-00909773964d[PCI   ] write PCI register 0x59 value 0x00 (len=1)
-00910101659d[PCI   ] write PCI register 0x59 value 0x30 (len=1)
-00910101659i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-00910429589i[P2ISA ] PCI IRQ routing: PIRQA# set to 0x0b
-00910429608i[P2ISA ] PCI IRQ routing: PIRQB# set to 0x09
-00910429627i[P2ISA ] PCI IRQ routing: PIRQC# set to 0x0b
-00910429646i[P2ISA ] PCI IRQ routing: PIRQD# set to 0x09
-00910429656i[P2ISA ] write: ELCR2 = 0x0a
-00910430426i[BIOS  ] PIIX3/PIIX4 init: elcr=00 0a
-00910442196d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910442202d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910442222d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910442229d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910442241d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-00910442250d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910442257d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910442265d[PCI   ] read  PCI register 0x0E value 0x00 (len=1)
-00910444098i[BIOS  ] PCI: bus=0 devfn=0x00: vendor_id=0x8086 device_id=0x1237 class=0x0600
-00910444146d[PCI   ] read  PCI register 0x10 value 0x00000000 (len=4)
-00910444174d[PCI   ] read  PCI register 0x14 value 0x00000000 (len=4)
-00910444202d[PCI   ] read  PCI register 0x18 value 0x00000000 (len=4)
-00910444230d[PCI   ] read  PCI register 0x1C value 0x00000000 (len=4)
-00910444258d[PCI   ] read  PCI register 0x20 value 0x00000000 (len=4)
-00910444286d[PCI   ] read  PCI register 0x24 value 0x00000000 (len=4)
-00910444306d[PCI   ] write PCI register 0x30 value 0xFFFFFFFE (len=4)
-00910444312d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-00910444325d[PCI   ] read  PCI register 0x3D value 0x00 (len=1)
-00910444535d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910444542d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910446411i[BIOS  ] PCI: bus=0 devfn=0x08: vendor_id=0x8086 device_id=0x7000 class=0x0601
-00910446687d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910446694d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910448563i[BIOS  ] PCI: bus=0 devfn=0x09: vendor_id=0x8086 device_id=0x7010 class=0x0101
-00910449414i[BIOS  ] region 4: 0x0000c000
-00910449580d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910449587d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910451456i[BIOS  ] PCI: bus=0 devfn=0x0a: vendor_id=0x8086 device_id=0x7020 class=0x0c03
-00910452285i[BIOS  ] region 4: 0x0000c020
-00910452419i[UHCI  ] new IRQ line = 9
-00910452465d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910452472d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910454341i[BIOS  ] PCI: bus=0 devfn=0x0b: vendor_id=0x8086 device_id=0x7113 class=0x0680
-00910454585i[ACPI  ] new IRQ line = 11
-00910454599i[ACPI  ] new IRQ line = 9
-00910454668d[PCI   ] write PCI register 0x72 value 0x4A (len=1)
-00910454668i[PCI   ] setting SMRAM control register to 0x4a
-00910618761i[CPU0  ] Enter to System Management Mode
-00910618761i[CPU0  ] enter_system_management_mode: temporary disable VMX while in SMM mode
-00910618771i[CPU0  ] RSM: Resuming from System Management Mode
-00910782792d[PCI   ] write PCI register 0x72 value 0x0A (len=1)
-00910782792i[PCI   ] setting SMRAM control register to 0x0a
-00910794348d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-00910794354d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-00910794373d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-00910794381d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-00910809508i[BIOS  ] MP table addr=0x000f9e90 MPC table addr=0x000f9dc0 size=0xc8
-00910811379i[BIOS  ] SMBIOS table addr=0x000f9ea0
-00910813574i[BIOS  ] ACPI tables: RSDP addr=0x000f9fd0 ACPI DATA addr=0x7fff0000 size=0xff8
-00910816843i[BIOS  ] Firmware waking vector 0x7fff00cc
-00910819314d[PCI   ] read  PCI register 0x59 value 0x30 (len=1)
-00910819323d[PCI   ] write PCI register 0x59 value 0x10 (len=1)
-00910819323i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-00910820046i[BIOS  ] bios_table_cur_addr: 0x000f9ff4
-00910948917i[VBIOS ] VGABios $Id: vgabios.c 226 2020-01-02 21:36:23Z vruppert $
-00910948988i[BXVGA ] VBE known Display Interface b0c0
-00910949020i[BXVGA ] VBE known Display Interface b0c5
-00910951663i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
-00910951828i[BXVGA ] VBE disabling
-00913474744i[BIOS  ] Booting from 0000:7c00
-00916800600i[XGUI  ] charmap update. Font is 9 x 16
-00993343360d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993343373d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993345606d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993345619d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993347863d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993347876d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993350131d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993350144d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993352410d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993352423d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993354700d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993354713d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993357001d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993357014d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993359313d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993359326d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993361636d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993361649d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993363970d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993363983d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993366315d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993366328d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993368671d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993368684d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993371038d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993371051d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993373416d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993373429d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993375805d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993375818d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993378205d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993378218d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993380616d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993380629d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993383038d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993383051d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993385471d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993385484d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993387915d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993387928d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993390370d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993390383d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993392836d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993392849d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993395313d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993395326d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993397845d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993397858d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993400388d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993400401d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993402942d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993402955d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993405507d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993405520d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993408083d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993408096d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993410670d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993410683d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993413268d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993413281d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993415888d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993415901d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993418519d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993418532d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993421161d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993421174d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993423814d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993423827d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993426478d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993426491d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993429153d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993429166d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993431839d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993431852d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993434536d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993434549d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993437244d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993437257d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993439963d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993439976d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993442693d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993442706d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993445434d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993445447d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993448186d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993448199d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993450949d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993450962d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993453723d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993453736d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993456508d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993456521d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993459304d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993459317d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993462111d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993462124d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993464929d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993464942d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993467758d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993467771d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993470598d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993470611d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993473449d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993473462d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993476311d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993476324d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993479250d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993479263d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993482200d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993482213d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993485161d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993485174d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993488133d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993488146d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993491116d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993491129d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993494110d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-00993494123d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01174250000i[XGUI  ] system RESET callback
-01174250000i[SYS   ] bx_pc_system_c::Reset(HARDWARE) called
-01174250000i[CPU0  ] cpu hardware reset
-01174250000i[APIC0 ] allocate APIC id=0 (MMIO enabled) to 0x0000fee00000
-01174250000i[CPU0  ] CPU[0] is the bootstrap processor
-01174250000i[CPU0  ] CPUID[0x00000000]: 0000000d 756e6547 6c65746e 49656e69
-01174250000i[CPU0  ] CPUID[0x00000001]: 0001067a 00010800 0408e3fd bfebfbff
-01174250000i[CPU0  ] CPUID[0x00000002]: 05b0b101 005657f0 00000000 2cb4304e
-01174250000i[CPU0  ] CPUID[0x00000003]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x00000004]: 04000121 01c0003f 0000003f 00000001
-01174250000i[CPU0  ] CPUID[0x00000005]: 00000040 00000040 00000003 03122220
-01174250000i[CPU0  ] CPUID[0x00000006]: 00000003 00000002 00000003 00000000
-01174250000i[CPU0  ] CPUID[0x00000007]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x00000008]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x00000009]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] WARNING: Architectural Performance Monitoring is not implemented
-01174250000i[CPU0  ] CPUID[0x0000000a]: 07280202 00000000 00000000 00000503
-01174250000i[CPU0  ] CPUID[0x0000000b]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x0000000c]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x0000000d]: 00000003 00000240 00000240 00000000
-01174250000i[CPU0  ] CPUID[0x80000000]: 80000008 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x80000001]: 00000000 00000000 00000001 20100000
-01174250000i[CPU0  ] CPUID[0x80000002]: 65746e49 2952286c 726f4320 4d542865
-01174250000i[CPU0  ] CPUID[0x80000003]: 44203229 43206f75 20205550 54202020
-01174250000i[CPU0  ] CPUID[0x80000004]: 30303639 20402020 30382e32 007a4847
-01174250000i[CPU0  ] CPUID[0x80000005]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x80000006]: 00000000 00000000 18008040 00000000
-01174250000i[CPU0  ] CPUID[0x80000007]: 00000000 00000000 00000000 00000000
-01174250000i[CPU0  ] CPUID[0x80000008]: 00003028 00000000 00000000 00000000
-01174250000i[CPU0  ] CPU Features supported:
-01174250000i[CPU0  ] 		x87
-01174250000i[CPU0  ] 		486ni
-01174250000i[CPU0  ] 		pentium_ni
-01174250000i[CPU0  ] 		p6ni
-01174250000i[CPU0  ] 		mmx
-01174250000i[CPU0  ] 		debugext
-01174250000i[CPU0  ] 		vme
-01174250000i[CPU0  ] 		pse
-01174250000i[CPU0  ] 		pae
-01174250000i[CPU0  ] 		pge
-01174250000i[CPU0  ] 		pse36
-01174250000i[CPU0  ] 		mtrr
-01174250000i[CPU0  ] 		pat
-01174250000i[CPU0  ] 		sysenter_sysexit
-01174250000i[CPU0  ] 		clflush
-01174250000i[CPU0  ] 		sse
-01174250000i[CPU0  ] 		sse2
-01174250000i[CPU0  ] 		sse3
-01174250000i[CPU0  ] 		ssse3
-01174250000i[CPU0  ] 		sse4_1
-01174250000i[CPU0  ] 		mwait
-01174250000i[CPU0  ] 		vmx
-01174250000i[CPU0  ] 		smx
-01174250000i[CPU0  ] 		longmode
-01174250000i[CPU0  ] 		lm_lahf_sahf
-01174250000i[CPU0  ] 		nx
-01174250000i[CPU0  ] 		cmpxhg16b
-01174250000i[CPU0  ] 		xsave
-01174250000i[CPU0  ] 		xapic
-01174250000i[PLUGIN] reset of 'pci' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'pci2isa' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'cmos' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'dma' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'pic' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'pit' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'vga' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'floppy' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'acpi' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'hpet' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'ioapic' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'keyboard' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'harddrv' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'pci_ide' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'biosdev' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'speaker' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'extfpuirq' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'parallel' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'serial' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'iodebug' plugin device by virtual method
-01174250000i[PLUGIN] reset of 'usb_uhci' plugin device by virtual method
-01174254662i[BIOS  ] $Revision: 13752 $ $Date: 2019-12-30 14:16:18 +0100 (Mon, 30 Dec 2019) $
-01174587544i[KBD   ] reset-disable command received
-01174613311i[BIOS  ] Starting rombios32
-01174613749i[BIOS  ] Shutdown flag 0
-01174614348i[BIOS  ] ram_size=0x80000000
-01174614814i[BIOS  ] ram_end=2048MB
-01175110189i[BIOS  ] Found 1 cpu(s)
-01175123841i[BIOS  ] bios_table_addr: 0x000f9db8 end=0x000fcc00
-01175123881d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175123887d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175123912d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175123918d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175123958d[PCI   ] read  PCI register 0x59 value 0x00 (len=1)
-01175123967d[PCI   ] write PCI register 0x59 value 0x00 (len=1)
-01175451662d[PCI   ] write PCI register 0x59 value 0x30 (len=1)
-01175451662i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-01175779592i[P2ISA ] PCI IRQ routing: PIRQA# set to 0x0b
-01175779611i[P2ISA ] PCI IRQ routing: PIRQB# set to 0x09
-01175779630i[P2ISA ] PCI IRQ routing: PIRQC# set to 0x0b
-01175779649i[P2ISA ] PCI IRQ routing: PIRQD# set to 0x09
-01175779659i[P2ISA ] write: ELCR2 = 0x0a
-01175780429i[BIOS  ] PIIX3/PIIX4 init: elcr=00 0a
-01175792199d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175792205d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175792225d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175792232d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175792244d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-01175792253d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175792260d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175792268d[PCI   ] read  PCI register 0x0E value 0x00 (len=1)
-01175794101i[BIOS  ] PCI: bus=0 devfn=0x00: vendor_id=0x8086 device_id=0x1237 class=0x0600
-01175794149d[PCI   ] read  PCI register 0x10 value 0x00000000 (len=4)
-01175794177d[PCI   ] read  PCI register 0x14 value 0x00000000 (len=4)
-01175794205d[PCI   ] read  PCI register 0x18 value 0x00000000 (len=4)
-01175794233d[PCI   ] read  PCI register 0x1C value 0x00000000 (len=4)
-01175794261d[PCI   ] read  PCI register 0x20 value 0x00000000 (len=4)
-01175794289d[PCI   ] read  PCI register 0x24 value 0x00000000 (len=4)
-01175794309d[PCI   ] write PCI register 0x30 value 0xFFFFFFFE (len=4)
-01175794315d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-01175794328d[PCI   ] read  PCI register 0x3D value 0x00 (len=1)
-01175794538d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175794545d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175796414i[BIOS  ] PCI: bus=0 devfn=0x08: vendor_id=0x8086 device_id=0x7000 class=0x0601
-01175796690d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175796697d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175798566i[BIOS  ] PCI: bus=0 devfn=0x09: vendor_id=0x8086 device_id=0x7010 class=0x0101
-01175799417i[BIOS  ] region 4: 0x0000c000
-01175799583d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175799590d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175801459i[BIOS  ] PCI: bus=0 devfn=0x0a: vendor_id=0x8086 device_id=0x7020 class=0x0c03
-01175802288i[BIOS  ] region 4: 0x0000c020
-01175802422i[UHCI  ] new IRQ line = 9
-01175802468d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01175802475d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01175804344i[BIOS  ] PCI: bus=0 devfn=0x0b: vendor_id=0x8086 device_id=0x7113 class=0x0680
-01175804588i[ACPI  ] new IRQ line = 11
-01175804602i[ACPI  ] new IRQ line = 9
-01175804671d[PCI   ] write PCI register 0x72 value 0x4A (len=1)
-01175804671i[PCI   ] setting SMRAM control register to 0x4a
-01175968764i[CPU0  ] Enter to System Management Mode
-01175968764i[CPU0  ] enter_system_management_mode: temporary disable VMX while in SMM mode
-01175968774i[CPU0  ] RSM: Resuming from System Management Mode
-01176132795d[PCI   ] write PCI register 0x72 value 0x0A (len=1)
-01176132795i[PCI   ] setting SMRAM control register to 0x0a
-01176144351d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01176144357d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01176144376d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-01176144384d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-01176159511i[BIOS  ] MP table addr=0x000f9e90 MPC table addr=0x000f9dc0 size=0xc8
-01176161382i[BIOS  ] SMBIOS table addr=0x000f9ea0
-01176163577i[BIOS  ] ACPI tables: RSDP addr=0x000f9fd0 ACPI DATA addr=0x7fff0000 size=0xff8
-01176166846i[BIOS  ] Firmware waking vector 0x7fff00cc
-01176169317d[PCI   ] read  PCI register 0x59 value 0x30 (len=1)
-01176169326d[PCI   ] write PCI register 0x59 value 0x10 (len=1)
-01176169326i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-01176170049i[BIOS  ] bios_table_cur_addr: 0x000f9ff4
-01176298920i[VBIOS ] VGABios $Id: vgabios.c 226 2020-01-02 21:36:23Z vruppert $
-01176298991i[BXVGA ] VBE known Display Interface b0c0
-01176299023i[BXVGA ] VBE known Display Interface b0c5
-01176301666i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
-01178824747i[BIOS  ] Booting from 0000:7c00
-01178906800i[XGUI  ] charmap update. Font is 9 x 16
-01258693363d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258693376d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258695609d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258695622d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258697866d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258697879d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258700134d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258700147d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258702413d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258702426d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258704703d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258704716d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258707004d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258707017d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258709316d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258709329d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258711639d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258711652d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258713973d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258713986d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258716318d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258716331d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258718674d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258718687d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258721041d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258721054d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258723419d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258723432d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258725808d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258725821d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258728208d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258728221d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258730619d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258730632d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258733041d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258733054d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258735474d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258735487d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258737918d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258737931d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258740373d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258740386d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258742839d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258742852d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258745316d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258745329d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258747848d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258747861d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258750391d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258750404d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258752945d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258752958d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258755510d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258755523d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258758086d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258758099d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258760673d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258760686d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258763271d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258763284d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258765891d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258765904d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258768522d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258768535d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258771164d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258771177d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258773817d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258773830d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258776481d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258776494d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258779156d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258779169d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258781842d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258781855d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258784539d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258784552d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258787247d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258787260d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258789966d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258789979d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258792696d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258792709d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258795437d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258795450d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258798189d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258798202d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258800952d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258800965d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258803726d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258803739d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258806511d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258806524d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258809307d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258809320d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258812114d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258812127d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258814932d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258814945d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258817761d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258817774d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258820601d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258820614d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258823452d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258823465d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258826314d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258826327d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258829253d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258829266d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258832203d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258832216d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258835164d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258835177d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258838136d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258838149d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258841119d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258841132d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258844113d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01258844126d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01625100000i[XGUI  ] system RESET callback
-01625100000i[SYS   ] bx_pc_system_c::Reset(HARDWARE) called
-01625100000i[CPU0  ] cpu hardware reset
-01625100000i[APIC0 ] allocate APIC id=0 (MMIO enabled) to 0x0000fee00000
-01625100000i[CPU0  ] CPU[0] is the bootstrap processor
-01625100000i[CPU0  ] CPUID[0x00000000]: 0000000d 756e6547 6c65746e 49656e69
-01625100000i[CPU0  ] CPUID[0x00000001]: 0001067a 00010800 0408e3fd bfebfbff
-01625100000i[CPU0  ] CPUID[0x00000002]: 05b0b101 005657f0 00000000 2cb4304e
-01625100000i[CPU0  ] CPUID[0x00000003]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x00000004]: 04000121 01c0003f 0000003f 00000001
-01625100000i[CPU0  ] CPUID[0x00000005]: 00000040 00000040 00000003 03122220
-01625100000i[CPU0  ] CPUID[0x00000006]: 00000003 00000002 00000003 00000000
-01625100000i[CPU0  ] CPUID[0x00000007]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x00000008]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x00000009]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] WARNING: Architectural Performance Monitoring is not implemented
-01625100000i[CPU0  ] CPUID[0x0000000a]: 07280202 00000000 00000000 00000503
-01625100000i[CPU0  ] CPUID[0x0000000b]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x0000000c]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x0000000d]: 00000003 00000240 00000240 00000000
-01625100000i[CPU0  ] CPUID[0x80000000]: 80000008 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x80000001]: 00000000 00000000 00000001 20100000
-01625100000i[CPU0  ] CPUID[0x80000002]: 65746e49 2952286c 726f4320 4d542865
-01625100000i[CPU0  ] CPUID[0x80000003]: 44203229 43206f75 20205550 54202020
-01625100000i[CPU0  ] CPUID[0x80000004]: 30303639 20402020 30382e32 007a4847
-01625100000i[CPU0  ] CPUID[0x80000005]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x80000006]: 00000000 00000000 18008040 00000000
-01625100000i[CPU0  ] CPUID[0x80000007]: 00000000 00000000 00000000 00000000
-01625100000i[CPU0  ] CPUID[0x80000008]: 00003028 00000000 00000000 00000000
-01625100000i[CPU0  ] CPU Features supported:
-01625100000i[CPU0  ] 		x87
-01625100000i[CPU0  ] 		486ni
-01625100000i[CPU0  ] 		pentium_ni
-01625100000i[CPU0  ] 		p6ni
-01625100000i[CPU0  ] 		mmx
-01625100000i[CPU0  ] 		debugext
-01625100000i[CPU0  ] 		vme
-01625100000i[CPU0  ] 		pse
-01625100000i[CPU0  ] 		pae
-01625100000i[CPU0  ] 		pge
-01625100000i[CPU0  ] 		pse36
-01625100000i[CPU0  ] 		mtrr
-01625100000i[CPU0  ] 		pat
-01625100000i[CPU0  ] 		sysenter_sysexit
-01625100000i[CPU0  ] 		clflush
-01625100000i[CPU0  ] 		sse
-01625100000i[CPU0  ] 		sse2
-01625100000i[CPU0  ] 		sse3
-01625100000i[CPU0  ] 		ssse3
-01625100000i[CPU0  ] 		sse4_1
-01625100000i[CPU0  ] 		mwait
-01625100000i[CPU0  ] 		vmx
-01625100000i[CPU0  ] 		smx
-01625100000i[CPU0  ] 		longmode
-01625100000i[CPU0  ] 		lm_lahf_sahf
-01625100000i[CPU0  ] 		nx
-01625100000i[CPU0  ] 		cmpxhg16b
-01625100000i[CPU0  ] 		xsave
-01625100000i[CPU0  ] 		xapic
-01625100000i[PLUGIN] reset of 'pci' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'pci2isa' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'cmos' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'dma' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'pic' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'pit' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'vga' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'floppy' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'acpi' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'hpet' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'ioapic' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'keyboard' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'harddrv' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'pci_ide' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'biosdev' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'speaker' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'extfpuirq' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'parallel' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'serial' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'iodebug' plugin device by virtual method
-01625100000i[PLUGIN] reset of 'usb_uhci' plugin device by virtual method
-01625104662i[BIOS  ] $Revision: 13752 $ $Date: 2019-12-30 14:16:18 +0100 (Mon, 30 Dec 2019) $
-01625437544i[KBD   ] reset-disable command received
-01625463311i[BIOS  ] Starting rombios32
-01625463749i[BIOS  ] Shutdown flag 0
-01625464348i[BIOS  ] ram_size=0x80000000
-01625464814i[BIOS  ] ram_end=2048MB
-01625960693i[BIOS  ] Found 1 cpu(s)
-01625974345i[BIOS  ] bios_table_addr: 0x000f9db8 end=0x000fcc00
-01625974385d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01625974391d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01625974416d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01625974422d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01625974462d[PCI   ] read  PCI register 0x59 value 0x00 (len=1)
-01625974471d[PCI   ] write PCI register 0x59 value 0x00 (len=1)
-01626302166d[PCI   ] write PCI register 0x59 value 0x30 (len=1)
-01626302166i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-01626630096i[P2ISA ] PCI IRQ routing: PIRQA# set to 0x0b
-01626630115i[P2ISA ] PCI IRQ routing: PIRQB# set to 0x09
-01626630134i[P2ISA ] PCI IRQ routing: PIRQC# set to 0x0b
-01626630153i[P2ISA ] PCI IRQ routing: PIRQD# set to 0x09
-01626630163i[P2ISA ] write: ELCR2 = 0x0a
-01626630933i[BIOS  ] PIIX3/PIIX4 init: elcr=00 0a
-01626642703d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626642709d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626642729d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626642736d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626642748d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-01626642757d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626642764d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626642772d[PCI   ] read  PCI register 0x0E value 0x00 (len=1)
-01626644605i[BIOS  ] PCI: bus=0 devfn=0x00: vendor_id=0x8086 device_id=0x1237 class=0x0600
-01626644653d[PCI   ] read  PCI register 0x10 value 0x00000000 (len=4)
-01626644681d[PCI   ] read  PCI register 0x14 value 0x00000000 (len=4)
-01626644709d[PCI   ] read  PCI register 0x18 value 0x00000000 (len=4)
-01626644737d[PCI   ] read  PCI register 0x1C value 0x00000000 (len=4)
-01626644765d[PCI   ] read  PCI register 0x20 value 0x00000000 (len=4)
-01626644793d[PCI   ] read  PCI register 0x24 value 0x00000000 (len=4)
-01626644813d[PCI   ] write PCI register 0x30 value 0xFFFFFFFE (len=4)
-01626644819d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-01626644832d[PCI   ] read  PCI register 0x3D value 0x00 (len=1)
-01626645042d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626645049d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626646918i[BIOS  ] PCI: bus=0 devfn=0x08: vendor_id=0x8086 device_id=0x7000 class=0x0601
-01626647194d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626647201d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626649070i[BIOS  ] PCI: bus=0 devfn=0x09: vendor_id=0x8086 device_id=0x7010 class=0x0101
-01626649921i[BIOS  ] region 4: 0x0000c000
-01626650087d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626650094d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626651963i[BIOS  ] PCI: bus=0 devfn=0x0a: vendor_id=0x8086 device_id=0x7020 class=0x0c03
-01626652792i[BIOS  ] region 4: 0x0000c020
-01626652926i[UHCI  ] new IRQ line = 9
-01626652972d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626652979d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626654848i[BIOS  ] PCI: bus=0 devfn=0x0b: vendor_id=0x8086 device_id=0x7113 class=0x0680
-01626655092i[ACPI  ] new IRQ line = 11
-01626655106i[ACPI  ] new IRQ line = 9
-01626655175d[PCI   ] write PCI register 0x72 value 0x4A (len=1)
-01626655175i[PCI   ] setting SMRAM control register to 0x4a
-01626819268i[CPU0  ] Enter to System Management Mode
-01626819268i[CPU0  ] enter_system_management_mode: temporary disable VMX while in SMM mode
-01626819278i[CPU0  ] RSM: Resuming from System Management Mode
-01626983299d[PCI   ] write PCI register 0x72 value 0x0A (len=1)
-01626983299i[PCI   ] setting SMRAM control register to 0x0a
-01626994855d[PCI   ] read  PCI register 0x00 value 0x8086 (len=2)
-01626994861d[PCI   ] read  PCI register 0x02 value 0x1237 (len=2)
-01626994880d[PCI   ] read  PCI register 0x0A value 0x0600 (len=2)
-01626994888d[PCI   ] read  PCI register 0x30 value 0x00000000 (len=4)
-01627010015i[BIOS  ] MP table addr=0x000f9e90 MPC table addr=0x000f9dc0 size=0xc8
-01627011886i[BIOS  ] SMBIOS table addr=0x000f9ea0
-01627014081i[BIOS  ] ACPI tables: RSDP addr=0x000f9fd0 ACPI DATA addr=0x7fff0000 size=0xff8
-01627017350i[BIOS  ] Firmware waking vector 0x7fff00cc
-01627019821d[PCI   ] read  PCI register 0x59 value 0x30 (len=1)
-01627019830d[PCI   ] write PCI register 0x59 value 0x10 (len=1)
-01627019830i[PCI   ] i440FX PMC write to PAM register 59 (TLB Flush)
-01627020553i[BIOS  ] bios_table_cur_addr: 0x000f9ff4
-01627149424i[VBIOS ] VGABios $Id: vgabios.c 226 2020-01-02 21:36:23Z vruppert $
-01627149495i[BXVGA ] VBE known Display Interface b0c0
-01627149527i[BXVGA ] VBE known Display Interface b0c5
-01627152170i[VBIOS ] VBE Bios $Id: vbe.c 228 2020-01-02 23:09:02Z vruppert $
-01629675251i[BIOS  ] Booting from 0000:7c00
-01635291750i[XGUI  ] charmap update. Font is 9 x 16
-01709543867d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709543880d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709546113d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709546126d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709548370d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709548383d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709550638d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709550651d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709552917d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709552930d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709555207d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709555220d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709557508d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709557521d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709559820d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709559833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709562143d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709562156d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709564477d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709564490d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709566822d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709566835d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709569178d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709569191d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709571545d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709571558d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709573923d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709573936d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709576312d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709576325d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709578712d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709578725d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709581123d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709581136d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709583545d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709583558d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709585978d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709585991d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709588422d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709588435d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709590877d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709590890d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709593343d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709593356d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709595820d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709595833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709598352d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709598365d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709600895d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709600908d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709603449d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709603462d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709606014d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709606027d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709608590d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709608603d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709611177d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709611190d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709613775d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709613788d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709616395d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709616408d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709619026d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709619039d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709621668d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709621681d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709624321d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709624334d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709626985d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709626998d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709629660d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709629673d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709632346d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709632359d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709635043d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709635056d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709637751d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709637764d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709640470d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709640483d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709643200d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709643213d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709645941d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709645954d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709648693d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709648706d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709651456d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709651469d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709654230d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709654243d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709657015d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709657028d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709659811d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709659824d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709662618d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709662631d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709665436d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709665449d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709668265d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709668278d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709671105d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709671118d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709673956d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709673969d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709676818d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709676831d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709679757d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709679770d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709682707d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709682720d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709685668d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709685681d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709688640d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709688653d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709691623d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709691636d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709694617d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01709694630d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
-01840313711i[BXVGA ] VBE set bpp (32)
-01840313733i[BXVGA ] VBE set xres (1280)
-01840313772i[BXVGA ] VBE set yres (768)
-01840313810i[BXVGA ] VBE enabling x 1280, y 768, bpp 32, 3932160 bytes visible
-02283350000p[XGUI  ] >>PANIC<< POWER button turned off.
-02283350000i[CPU0  ] CPU is in long mode (active)
-02283350000i[CPU0  ] CS.mode = 64 bit
-02283350000i[CPU0  ] SS.mode = 64 bit
-02283350000i[CPU0  ] EFER   = 0x00000500
-02283350000i[CPU0  ] | RAX=ffff800000dbffff  RBX=0000000000010800
-02283350000i[CPU0  ] | RCX=00000000c0000080  RDX=0000000000000000
-02283350000i[CPU0  ] | RSP=ffff800000007df8  RBP=ffff800000007df8
-02283350000i[CPU0  ] | RSI=0000000000008098  RDI=000000000000bd00
-02283350000i[CPU0  ] |  R8=0000000000000000   R9=0000000000000000
-02283350000i[CPU0  ] | R10=0000000000000000  R11=0000000000001304
-02283350000i[CPU0  ] | R12=0000000000000000  R13=0000000000000000
-02283350000i[CPU0  ] | R14=0000000000000000  R15=0000000000000000
-02283350000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf zf AF pf cf
-02283350000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-02283350000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  FS:0010( 0002| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  GS:0010( 0002| 0|  0) 00000000 00000000 0 0
-02283350000i[CPU0  ] |  MSR_FS_BASE:0000000000000000
-02283350000i[CPU0  ] |  MSR_GS_BASE:0000000000000000
-02283350000i[CPU0  ] | RIP=ffff8000001041b8 (ffff8000001041b8)
-02283350000i[CPU0  ] | CR0=0x80000011 CR2=0x0000000000000000
-02283350000i[CPU0  ] | CR3=0x0000000000101000 CR4=0x00000020
-02283350000d[PCI   ] Exit
-02283350000i[CMOS  ] Last time is 1595491652 (Thu Jul 23 03:07:32 2020)
-02283350000i[XGUI  ] Exit
-02283350000i[SIM   ] quit_sim called with exit code 1
+00007675150i[XGUI  ] charmap update. Font is 9 x 16
+00033600000e[XGUI  ] xkeypress(): keysym ffeb unhandled!
+00131260155d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131260168d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131262401d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131262414d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131264658d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131264671d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131266926d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131266939d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131269205d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131269218d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131271495d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131271508d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131273796d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131273809d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131276108d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131276121d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131278431d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131278444d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131280765d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131280778d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131283110d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131283123d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131285466d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131285479d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131287833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131287846d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131290211d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131290224d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131292600d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131292613d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131295000d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131295013d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131297411d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131297424d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131299833d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131299846d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131302266d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131302279d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131304710d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131304723d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131307165d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131307178d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131309631d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131309644d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131312108d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131312121d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131314640d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131314653d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131317183d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131317196d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131319737d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131319750d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131322302d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131322315d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131324878d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131324891d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131327465d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131327478d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131330063d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131330076d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131332683d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131332696d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131335314d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131335327d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131337956d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131337969d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131340609d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131340622d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131343273d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131343286d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131345948d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131345961d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131348634d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131348647d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131351331d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131351344d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131354039d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131354052d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131356758d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131356771d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131359488d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131359501d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131362229d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131362242d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131364981d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131364994d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131367744d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131367757d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131370518d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131370531d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131373303d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131373316d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131376099d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131376112d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131378906d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131378919d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131381724d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131381737d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131384553d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131384566d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131387393d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131387406d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131390244d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131390257d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131393106d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131393119d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131396045d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131396058d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131398995d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131399008d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131401956d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131401969d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131404928d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131404941d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131407911d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131407924d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131410905d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00131410918d[PCI   ] read  PCI register 0x00 value 0x12378086 (len=4)
+00171463710i[BXVGA ] VBE set bpp (32)
+00171463732i[BXVGA ] VBE set xres (1280)
+00171463771i[BXVGA ] VBE set yres (768)
+00171463809i[BXVGA ] VBE enabling x 1280, y 768, bpp 32, 3932160 bytes visible
+01009700000p[XGUI  ] >>PANIC<< POWER button turned off.
+01009700000i[CPU0  ] CPU is in long mode (active)
+01009700000i[CPU0  ] CS.mode = 64 bit
+01009700000i[CPU0  ] SS.mode = 64 bit
+01009700000i[CPU0  ] EFER   = 0x00000500
+01009700000i[CPU0  ] | RAX=0000000000000012  RBX=0000000000010800
+01009700000i[CPU0  ] | RCX=0000000000000000  RDX=0000000000000000
+01009700000i[CPU0  ] | RSP=ffff800000007dd8  RBP=ffff800000007df8
+01009700000i[CPU0  ] | RSI=0000000000000500  RDI=ffff800000a00000
+01009700000i[CPU0  ] |  R8=0000000000ffff00   R9=0000000000000000
+01009700000i[CPU0  ] | R10=0000000000000000  R11=00000000000047f8
+01009700000i[CPU0  ] | R12=0000000000000000  R13=0000000000000000
+01009700000i[CPU0  ] | R14=0000000000000000  R15=ffff800000108b60
+01009700000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf ZF af PF cf
+01009700000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+01009700000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  FS:0010( 0002| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  GS:0010( 0002| 0|  0) 00000000 00000000 0 0
+01009700000i[CPU0  ] |  MSR_FS_BASE:0000000000000000
+01009700000i[CPU0  ] |  MSR_GS_BASE:0000000000000000
+01009700000i[CPU0  ] | RIP=ffff8000001042ae (ffff8000001042ae)
+01009700000i[CPU0  ] | CR0=0x80000011 CR2=0x0000000000000000
+01009700000i[CPU0  ] | CR3=0x0000000000101000 CR4=0x00000020
+01009700000d[PCI   ] Exit
+01009700000i[CMOS  ] Last time is 1595626974 (Fri Jul 24 16:42:54 2020)
+01009700000i[XGUI  ] Exit
+01009700000i[SIM   ] quit_sim called with exit code 1
