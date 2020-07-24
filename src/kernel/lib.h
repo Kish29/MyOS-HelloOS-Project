@@ -11,7 +11,7 @@
 // ({												\
 // 	typeof(((type *)0)->member) * p = ptr;		\
 
-int strlen(char *str) {
+inline int strlen(char *str) {
 	register int __res;
 	__asm__	__volatile__	(
 			"cld	\n\t"		// 设置自增
