@@ -50,8 +50,9 @@ void putchar(unsigned int *_frame_buf_addr, int _x_resolution, int _x_position, 
 /* number函数通过传入的flag参数，将传入的数字格式化
  * base是进制，str传入当前字符串地址
  */
+char tmp[4096] = {0};  // tmp处理符号或者特殊字符后面的数据，最后与str整合
 static char *number(char *str, long num, int base, int size, int precision, int type) {
-	char c, sign, tmp[50];	// tmp处理符号或者特殊字符后面的数据，最后与str整合
+	char c, sign;
 	// 注意const char *指地址无法改变，但是可以赋值改变
 	const char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	int i;	// tmp的递增索引
@@ -239,6 +240,11 @@ repeat:
 			case 'd': // 10进制
 			case 'i': // 有符号
 				flags |= SIGN;
+				if(qualifier == 'l')
+					str = number(str, va_arg(args, long), 10, field_width, precision, flags);
+				else 
+					str = number(str, va_arg(args, int), 10, field_width, precision, flags);
+				break;
 			case 'u':
 				if(qualifier == 'l')
 					str = number(str, va_arg(args, unsigned long), 10, field_width, precision, flags);
