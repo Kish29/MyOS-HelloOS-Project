@@ -31,6 +31,36 @@ struct _list {
 	struct _list *next;
 };
 
+/*所有的inline函数都必须先声明，再定义成inline！*/
+void list_init(struct _list *list);
+
+void list_add_to_tail(struct _list *tail, struct _list *node);
+
+int list_delete(struct _list *del_node);
+
+bool list_is_empty(struct _list *node);
+
+struct _list *get_node_prev(struct _list *node);
+
+struct _list *get_node_next(struct _list *node);
+
+void *memcpy(void *src, void *des, long num);
+
+int memcmp(void *_first_part, void *_second_part, long _count);
+
+char *strcpy(char *src, char *des);
+
+char *strncpy(char *src, char *des, long num);
+
+char *strcat(char *src, char *des);
+
+int strcmp(char *_first_str, char *_second_str);
+
+int strncmp(char *_first_str, char *_second_str, long num);
+
+int strlen(char *str);
+
+
 inline void list_init(struct _list *list) {
 	list->prev = list;
 	list->next = list;
@@ -74,7 +104,7 @@ inline struct _list *get_node_next(struct _list *node) {
 /* 参考本系统linux源码的版本 */
 /* 注：void *占用8个字节 
  * memcpy，从src复制到des，一共num个字节 */
-void *memcpy(void *src, void *des, long num) {
+inline void *memcpy(void *src, void *des, long num) {
 	int d0, d1, d2;
 	__asm__	__volatile__	(
 			"rep	\n\t"		/* rep 指令，movs?的前缀，在cx不等于0的情况下，对字符串重复进行操作*/
@@ -123,7 +153,7 @@ inline void * memcpy(void *From,void * To,long Num)
  *	else if	_first_part	> _second_part	->		1
  *	else if _first_part > _second_part	->	   -1
  *	_count is the compare times	*/
-int memcmp(void *_first_part, void *_second_part, long _count) {
+inline int memcmp(void *_first_part, void *_second_part, long _count) {
 	register int __res;
 
 	__asm__	__volatile__	(
@@ -169,7 +199,7 @@ inline char *strncpy(char *src, char *des, long num) {
 			"js	2f	\n\t"		/* jmp if sign，检查SF标志位，如果结果为负则跳转 */
 			"lodsb	\n\t"
 			"stosb	\n\t"
-			"testb	%%al, %%al,	\n\t"
+			"testb	%%al, %%al	\n\t"
 			"jne	1b	\n\t"
 			"rep	\n\t"		/* ecx 等于0的时候自动停止  */
 			"stosb	\n\t"
@@ -256,8 +286,8 @@ inline int strncmp(char *_first_str, char *_second_str, long num) {
 	return __res;
 }
 
-/*获取两个字符串的长度*/
-int strlen(char *str) {
+/*获取字符串的长度*/
+inline int strlen(char *str) {
 	register int __res;
 	__asm__	__volatile__	(
 			"cld	\n\t"		// 设置自增
