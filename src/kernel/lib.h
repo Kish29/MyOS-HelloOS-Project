@@ -71,15 +71,17 @@ inline struct _list *get_node_next(struct _list *node) {
 		return node->next;
 }
 
+/* 参考本系统linux源码的版本 */
 /* 注：void *占用8个字节 
- * memcp，从src复制到des，一共num个字节 */
-inline void *memcpy(void *src, void *des, long num) {
+ * memcpy，从src复制到des，一共num个字节 */
+void *memcpy(void *src, void *des, long num) {
 	int d0, d1, d2;
 	__asm__	__volatile__	(
 			"rep	\n\t"		/* rep 指令，movs?的前缀，在cx不等于0的情况下，对字符串重复进行操作*/
-			"movsl	\n\t"		/* according to the b/w/d/q, mov ds:si -> es:di */
-			"movl	%4, %%ecx	\n\t"	/* 按照上一个指令movsl，一次传送4个字节  */
-			"andl	$3,	%%ecx	\n\t"	/* 和3求与，按照ZF标志位，如果为0，则num为4的倍数，否则不为4的倍数，余数可能为1、2、3  */
+			"movsl	\n\t"			/* according to the b/w/d/q, mov ds:si -> es:di */
+			"movq	%4, %%rcx	\n\t"	/* 按照上一个指令movsl，一次传送4个字节  */
+			// 注意这儿的movq指令，因为64位机器上，long型的num变量（%4）默认8B，如果写成movl	%4, %%ecx 编译器就会报不支持mov指令错误！
+			"andq	$3,	%%rcx	\n\t"	/* 和3求与，按照ZF标志位，如果为0，则num为4的倍数，否则不为4的倍数，余数可能为1、2、3  */
 			"jz	1f	\n\t"
 			"rep;	movsb	\n\t"		/* 不为4的倍数，每次传送1B将剩下的字节传送完  */
 			"1:"
@@ -90,11 +92,38 @@ inline void *memcpy(void *src, void *des, long num) {
 	return des;
 }
 
+
+/* 作者的版本
+
+inline void * memcpy(void *From,void * To,long Num)
+{
+	int d0,d1,d2;
+	__asm__ __volatile__	(	"cld	\n\t"
+					"rep	\n\t"
+					"movsq	\n\t"
+					"testb	$4,%b4	\n\t"
+					"je	1f	\n\t"
+					"movsl	\n\t"
+					"1:\ttestb	$2,%b4	\n\t"
+					"je	2f	\n\t"
+					"movsw	\n\t"
+					"2:\ttestb	$1,%b4	\n\t"
+					"je	3f	\n\t"
+					"movsb	\n\t"
+					"3:	\n\t"
+					:"=&c"(d0),"=&D"(d1),"=&S"(d2)
+					:"0"(Num/8),"q"(Num),"1"(To),"2"(From)
+					:"memory"
+				);
+	return To;
+} */
+
+
 /*	if _first_part == _second_part		->		0
  *	else if	_first_part	> _second_part	->		1
  *	else if _first_part > _second_part	->	   -1
  *	_count is the compare times	*/
-inline int memcmp(void *_first_part, void *_second_part, long _count) {
+int memcmp(void *_first_part, void *_second_part, long _count) {
 	register int __res;
 
 	__asm__	__volatile__	(
@@ -228,7 +257,7 @@ inline int strncmp(char *_first_str, char *_second_str, long num) {
 }
 
 /*获取两个字符串的长度*/
-inline int strlen(char *str) {
+int strlen(char *str) {
 	register int __res;
 	__asm__	__volatile__	(
 			"cld	\n\t"		// 设置自增

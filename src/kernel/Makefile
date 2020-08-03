@@ -1,4 +1,4 @@
-CFLAGS := -mcmodel=large -fno-builtin -m64 -O
+CFLAGS := -mcmodel=large -fno-builtin -m64
 ASFLAGS := --64
 
 # 不要缩进注释，否则make认为是一条指令

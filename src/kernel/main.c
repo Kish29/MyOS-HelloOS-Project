@@ -80,9 +80,18 @@ void _init_kernel(void) {
 	char *str1 = "abcde";
 	char *str2 = "abcde";
 
+	char *memcpy1 = "test memcpy";
+	char *memcpy2 = (char *)0xffff800000a00000;
+
+	memcpy(memcpy1, memcpy2, 10);
+
 	int b = memcmp(str1, str2, 5);
 
-	color_printk(PURPLE, BLACK, "The value is %d", b);
+	color_printk(PURPLE, BLACK, "The value is %d\n", b);
 
+	int i;
+	i = 1 / 0;
+
+	color_printk(YELLOW, BLACK, "After interrupt.\n");
 	while(1);
 }

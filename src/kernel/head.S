@@ -84,7 +84,65 @@ entry64:
 	movq	%rax,	%gs 
 	movq	%rax,	%ss	
 	movq	$0xffff800000007e00,	%rsp	/* rsp address */
-	
+
+/* 为IDT表添加一个ignore_int中断函数 */
+/* IDT门描述符:
+ * 127		   96 95         64 63     48        31       16         0
+ * +-------------+-------------+--------+--------+--------+----------+
+   |             | 偏移地址    |偏移地址|  属性  |段选择子|  偏移地址|
+   +-----------------------------------------------------------------+
+ */
+setup_IDT:
+	leaq	ignore_int(%rip),	%rdx
+	movq	$(0x08 << 16),	%rax		/* 段选择子, 从GDT中选择段的基地址，这儿选择的是代码段的基地址 */
+	movw	%dx,	%ax 
+	movq	$(0x8e00 << 32),	%rcx	/*已在内存，0特权*/
+	addq	%rcx,	%rax 
+	movl	%edx,	%ecx
+	shrl	$16,	%ecx 
+	shlq	$48,	%rcx 
+	addq	%rcx,	%rax 
+	shrq	$32,	%rdx 
+	leaq	IDT_Table(%rip),	%rdi 
+	movq	$256,	%rcx	/* 一共256项  */
+rp_sidt:
+	movq	%rax,	(%rdi)
+	movq	%rdx,	8(%rdi)
+	addq	$16,	%rdi 
+	loop	rp_sidt
+
+/* 设置任务状态段描述符  */
+/* TSS在GDT中的段描述符：
+ *127      96 95     63 56   51    48    40       31       16     0
+ * +---------+-------+--+----+------+----+--------+--------+------+
+ * |         | 段基地址 |    |段长度|属性|     段基地址    |段长度|
+ * +--------------------------------------------------------------+
+ * TSS表长度为103B
+ */
+setup_TSS:
+	leaq	TSS64_Table(%rip),	%rdx 
+	xorq	%rax,	%rax 
+	xorq	%rcx,	%rcx	
+	movq	$(0x89 << 40),	%rax 
+	movl	%edx,	%ecx     /* */
+	shrl	$24,	%ecx	 /* 设置56～63位的段基地址 */
+	shlq	$56,	%rcx	 /*  */
+	addq	%rcx,	%rax	 /* */
+	xorq	%rcx,	%rcx
+	movl	%edx,	%ecx 
+	andl	$0x00ffffff,	%ecx /*这里设置40~16的24bit段基地址*/
+	shlq	$16,	%rcx 
+	addq	%rcx,	%rax 
+	addq	$103,	%rax 
+	leaq	GDT_Table(%rip),	%rdi	
+	movq	%rax,	72(%rdi)	/*第9号段*/
+	shrq	$32,	%rdx 
+	movq	%rdx,	80(%rdi)
+
+	movw	$72,	%ax 
+	ltr		%ax			/* TR 任务状态断寄存器保存的是段选择子和描述符信息 */
+
+/* 接下来的部分将进入0xffff800000000000的地址 */
 	movq	go_to_kernel(%rip),		%rax	/* base of 0xffff800000000000 code address */
 	pushq	$0x8 
 	pushq	%rax 
@@ -93,6 +151,74 @@ entry64:
 go_to_kernel:
 	.quad	_init_kernel
 
+ignore_int:
+	cld 
+	pushq	%rax 
+	pushq	%rbx 
+	pushq	%rcx 
+	pushq	%rdx 
+	pushq	%rbp 
+	pushq	%rdi 
+	pushq	%rsi 
+
+	pushq	%r8 
+	pushq	%r9
+	pushq	%r10
+	pushq	%r11
+	pushq	%r12
+	pushq	%r13
+	pushq	%r14
+	pushq	%r15
+
+	/* 64-bit 模式下不能使用 push %es 指令 */
+	movq	%es,	%rax 
+	pushq	%rax 
+	movq	%ds,	%rax
+	pushq	%rax 
+
+	movq	$0x10,	%rax /*数据段*/
+	movq	%rax,	%es 
+	movq	%rax,	%ds 
+
+	leaq	int_msg(%rip),	%rax 
+	pushq	%rax
+	movq	%rax,	%rdx 
+	movq	$0x00000000,	%rsi 
+	movq	$0x00ff0000,	%rdi 
+	xorq	%rax,	%rax 
+	callq	color_printk
+	addq	$0x8,	%rsp	/*之前压了msg的地址到栈中，调用完地址增长，不然后面的恢复寄存器的值会出问题，这也是调用者维护栈平衡*/
+
+Loop:
+	jmp	Loop	
+
+	popq	%rax 
+	movq	%rax,	%ds 
+	popq	%rax 
+	movq	%rax,	%es 
+
+	popq	%r15
+	popq	%r14
+	popq	%r13
+	popq	%r12
+	popq	%r11
+	popq	%r10
+	popq	%r9
+	popq	%r8
+
+	popq	%rsi 
+	popq	%rdi 
+	popq	%rsp 
+	popq	%rdx 
+	popq	%rcx 
+	popq	%rbx 
+	popq	%rax 
+	iretq
+
+int_msg:
+	.asciz	"Unknown interrupt or fault at RIP\n"
+	/* 用ascii声明一个文本字符串，且被预定义，放在内存中 */
+	/* asciz 与ascii 不同的地方在于末尾要添加一个'\0'*/
 /********************** 接下来是页的4层不同描述符 ***********************/
 
 .align	8	// 8B 对齐
@@ -149,6 +275,7 @@ __PDE:
 /* ========== GDT table ============*/
 .global GDT_Table 
 
+/*注意，64位的系统断描述符变成了16B大小了*/
 GDT_Table:
 	.quad	0x0000000000000000			/*0 null descriptor					0x00 */
 	.quad	0x0020980000000000			/*1 kernel code		64-bit	segment 0x08 */
@@ -157,7 +284,10 @@ GDT_Table:
 	.quad	0x0000f20000000000			/*4 user   data		64-bit	segment 0x20 */
 	.quad	0x00cf9a000000ffff			/*5 kernel code		32-bit	segment 0x28 */
 	.quad	0x00cf92000000ffff			/*6 kernel data		32-bit	segment 0x30 */
-	.fill	10, 8, 0					/*	这儿是TSS任务状态段描述符，16B一个，这儿定义了40个*/
+	.quad	0x00cffa000000ffff			/*7 user   code		32-bit	segment 0x38 */
+	.quad	0x00cff2000000ffff			/*8 user   data		32-bit	segment 0x40 */
+	.fill	10, 8, 0					/*9~10  TSS任务状态段描述符，16B一个0x50 */
+	/*这儿有 10x8/16 = 5个系统断描述符*/
 	// .fill repeat, {size}, {value}
 GDT_END:
 
