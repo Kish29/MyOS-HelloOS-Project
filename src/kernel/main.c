@@ -4,6 +4,7 @@
 
 #include "lib.h"
 #include "printk.h"
+#include "trap.h"
 
 void _init_kernel(void) {
 	// int *addr = (int *)0xffff800000a00000;	// addr 保存帧缓存的地址
@@ -89,6 +90,8 @@ void _init_kernel(void) {
 
 	color_printk(PURPLE, BLACK, "The value is %d\n", b);
 
+	sys_idt_vector_init();
+	while(1);
 	int i;
 	i = 1 / 0;
 
