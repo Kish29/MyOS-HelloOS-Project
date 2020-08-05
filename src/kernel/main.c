@@ -5,6 +5,7 @@
 #include "lib.h"
 #include "printk.h"
 #include "trap.h"
+#include "gate.h"
 
 void _init_kernel(void) {
 	// int *addr = (int *)0xffff800000a00000;	// addr 保存帧缓存的地址
@@ -78,23 +79,35 @@ void _init_kernel(void) {
 
 	// color_printk(WHITE, BLACK, "hellos>");
 
-	char *str1 = "abcde";
-	char *str2 = "abcde";
+	// char *str1 = "abcde";
+	// char *str2 = "abcde";
 
-	char *memcpy1 = "test memcpy";
-	char *memcpy2 = (char *)0xffff800000a00000;
+	// char *memcpy1 = "test memcpy";
+	// char *memcpy2 = (char *)0xffff800000a00000;
 
-	memcpy(memcpy1, memcpy2, 10);
+	// memcpy(memcpy1, memcpy2, 10);
 
-	int b = memcmp(str1, str2, 5);
+	// int b = memcmp(str1, str2, 5);
 
-	color_printk(PURPLE, BLACK, "The value is %d\n", b);
+	// color_printk(PURPLE, BLACK, "The value is %d\n", b);
+
+	// // sys_idt_vector_init();
+	// while(1);
+	// int i;
+	// i = 1 / 0;
+
+	// color_printk(YELLOW, BLACK, "After interrupt.\n");
+	
+	load_TR(9);
+
+	unsigned long tss_bean = 0xffff800000007c00;
+	// 由于使用的是2MB物理页，低21-bit作为offset，所以就是使用内存0x7c00处作为栈顶
+	set_TSS64(tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean);
 
 	sys_idt_vector_init();
-	while(1);
-	int i;
-	i = 1 / 0;
 
-	color_printk(YELLOW, BLACK, "After interrupt.\n");
+	int i;
+	i = *(int *)0xffff80000aa00000;
+	// i = 1 / 0;
 	while(1);
 }

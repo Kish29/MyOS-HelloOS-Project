@@ -99,7 +99,7 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 			*str++ = digits[33]; // digits已经根据SMALL标志进行了变化，所以只需要取第33位就行了
 		}
 	// 如果类型里面没有左对其标志，填充‘0’或者‘c’
-	if(!type & LEFT)
+	if(!(type & LEFT))
 		while(size-- > 0)
 			*str++ = c;
 
@@ -147,7 +147,7 @@ repeat:
 			goto repeat;
 			case '#':	flags |= SPECIAL;
 			goto repeat;
-			case '0':	flags |= SMALL;
+			case '0':	flags |= ZEROPAD;		// 表示16进制或8进制前面用0填充
 			goto repeat;
 		}
 

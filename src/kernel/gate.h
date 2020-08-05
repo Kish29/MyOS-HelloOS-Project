@@ -101,6 +101,8 @@ void set_system_trap_gate(unsigned int index, unsigned char IST, void *code_addr
 inline void set_itrpt_gate(unsigned int index, unsigned char IST, void *code_addr) {
 	_set_gate(IDT_Table + index, 0x8e, IST, code_addr);		//P,DPL=0,TYPE=E
 }
+// 注，由于IDT_Table声明为gate_desc_struct，一个元素占用16B，所以+index时，按照这个大小加减
+// 其实c/c++中，类型只是一种数据的大小和存储标识而已，比如void *就可以转变成任何类型
 
 inline void set_system_itrpt_gate(unsigned int index, unsigned char IST, void *code_addr) {
 	_set_gate(IDT_Table + index, 0xee, IST, code_addr);		//P,DPL=3,TYPE=E
@@ -112,6 +114,23 @@ inline void set_trap_gate(unsigned int index, unsigned char IST, void *code_addr
 
 inline void set_system_trap_gate(unsigned int index, unsigned char IST, void *code_addr) {
 	_set_gate(IDT_Table + index, 0xef, IST, code_addr);		//P,DPL=3,TYPE=F
+}
+
+/*设置TSS表的26项数据，其中有几项保留*/
+/* TSS 表每个表项4B，分别保存底32bit和高32bit*/
+void set_TSS64(unsigned long rsp0, unsigned long rsp1, unsigned rsp2, unsigned long ist1, unsigned long ist2, unsigned long ist3, unsigned long ist4, unsigned long ist5, unsigned long ist6, unsigned long ist7) {
+	*((unsigned long *)(TSS64_Table + 1)) = rsp0;
+	*((unsigned long *)(TSS64_Table + 3)) = rsp1;
+	*((unsigned long *)(TSS64_Table + 5)) = rsp2;
+
+	*((unsigned long *)(TSS64_Table + 9)) = ist1;
+	*((unsigned long *)(TSS64_Table + 11)) = ist2;
+	*((unsigned long *)(TSS64_Table + 13)) = ist3;
+	*((unsigned long *)(TSS64_Table + 15)) = ist4;
+	*((unsigned long *)(TSS64_Table + 17)) = ist5;
+	*((unsigned long *)(TSS64_Table + 19)) = ist6;
+	*((unsigned long *)(TSS64_Table + 21)) = ist7;
+
 }
 
 #endif

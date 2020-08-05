@@ -11,6 +11,7 @@
 #include "lib.h"
 
 /* 异常向量表
+ * 事实上，这些函数是在entry.S中进行声明的
  * */
 // 除零错误
 void divide_error();
