@@ -98,6 +98,7 @@ void _init_kernel(void) {
 
 	// color_printk(YELLOW, BLACK, "After interrupt.\n");
 	
+	// TSS表的索引在GDT表的第9项
 	load_TR(9);
 
 	unsigned long tss_bean = 0xffff800000007c00;
