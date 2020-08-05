@@ -159,6 +159,7 @@ ENTRY(nmi)
 	pushq	%rsi 
 	pushq	%rdx 
 	pushq	%rcx 
+	pushq	%rbx	// 漏了rbx，补上。。。。。
 	pushq	%r8 
 	pushq	%r9 
 	pushq	%r10 
