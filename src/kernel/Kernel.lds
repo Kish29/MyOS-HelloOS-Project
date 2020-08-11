@@ -19,10 +19,10 @@ SECTIONS {
 
 	. = ALIGN(8); /*8B 对齐*/
 	.data : {
-		_data = .;
+		_data = .;  /*这里的'.'表示获取'.'的当前地址*/
 		*(.data)
 
-		_edata = .;
+		_edata = .; /*同理*/
 	}
 
 	.bss : {

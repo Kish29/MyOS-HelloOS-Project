@@ -46,6 +46,8 @@ struct _list *get_node_next(struct _list *node);
 
 void *memcpy(void *src, void *des, long num);
 
+void *memset(void *addr, unsigned char c, long count);
+
 int memcmp(void *_first_part, void *_second_part, long _count);
 
 char *strcpy(char *src, char *des);
@@ -59,6 +61,18 @@ int strcmp(char *_first_str, char *_second_str);
 int strncmp(char *_first_str, char *_second_str, long num);
 
 int strlen(char *str);
+
+unsigned long bit_set(unsigned long *addr, unsigned long index);
+
+unsigned long bit_get(unsigned long *addr, unsigned long index);
+
+unsigned long bit_clean(unsigned long *addr, unsigned long index);
+
+unsigned char io_in8(unsigned short port);
+
+unsigned int io_in32(unsigned short port);
+
+void io_out8(unsigned short port, unsigned char value);
 
 
 inline void list_init(struct _list *list) {
@@ -108,20 +122,20 @@ inline void *memcpy(void *src, void *des, long num) {
 	int d0, d1, d2;
 	__asm__	__volatile__	(
 			"rep	\n\t"		/* rep 指令，movs?的前缀，在cx不等于0的情况下，对字符串重复进行操作*/
-			"movsl	\n\t"			/* according to the b/w/d/q, mov ds:si -> es:di */
+			"movsq	\n\t"			/* according to the b/w/d/q, mov ds:si -> es:di */
 			"movq	%4, %%rcx	\n\t"	/* 按照上一个指令movsl，一次传送4个字节  */
 			// 注意这儿的movq指令，因为64位机器上，long型的num变量（%4）默认8B，如果写成movl	%4, %%ecx 编译器就会报不支持mov指令错误！
-			"andq	$3,	%%rcx	\n\t"	/* 和3求与，按照ZF标志位，如果为0，则num为4的倍数，否则不为4的倍数，余数可能为1、2、3  */
+			"andq	$7,	%%rcx	\n\t"	/* 和3求与，将rcx得到除以8的余数，按照ZF标志位，如果为0，则num为4的倍数，否则不为4的倍数，余数可能为1、2、3```7  */
 			"jz	1f	\n\t"
-			"rep;	movsb	\n\t"		/* 不为4的倍数，每次传送1B将剩下的字节传送完  */
+			"rep	\n\t"
+			"movsb	\n\t"		/* 不为4的倍数，每次传送1B将剩下的字节传送完  */
 			"1:"
 			:"=&c"(d0), "=&D"(d1), "=&S"(d2)	/* '&'表示输入输出不能使用相同的寄存器 */
-			:"0"(num / 4), "q"(num), "1"(des), "2"(src)		/* 按照movsq 一次传送8B，那么ecx传送次数就是num/8 */
+			:"0"(num / 8), "q"(num), "1"(des), "2"(src)		/* 按照movsq 一次传送8B，那么ecx传送次数就是num/8 */
 			:"memory"
 			);
 	return des;
 }
-
 
 /* 作者的版本
 
@@ -147,6 +161,29 @@ inline void * memcpy(void *From,void * To,long Num)
 				);
 	return To;
 } */
+
+// set memory at addr with c, number is count 
+inline void *memset(void *addr, unsigned char c, long count) {
+	int d0, d1;
+	// 因为设置的char c是一个字节(1B)，而我们每次要传送8B,所以乘上0x0101010101010101UL,
+	// tmp的每一个字节都是对应的char c
+	unsigned long tmp = c * 0x0101010101010101UL;
+	__asm__	__volatile__	(
+			"cld	\n\t"
+			"rep	\n\t"
+			"stosq	\n\t"     // store rax to es:[rdi]
+			"movq	%3,	%%rcx	\n\t"
+			"andq	$7,	%%rcx	\n\t"	// rcx设置为/8的余数
+			"jz	1f	\n\t"
+			"rep	\n\t"
+			"stosb	\n\t"
+			"1:	\n\t"
+			:"=&c"(d0), "=&D"(d1)
+			:"a"(tmp), "q"(count), "0"(count / 8), "1"(addr)
+			:"memory"
+			);
+	return addr;
+}
 
 
 /*	if _first_part == _second_part		->		0
@@ -301,7 +338,32 @@ inline int strlen(char *str) {
 	return __res;
 }
 
+// Intel Volumn 1: insw m16, dx :
+//								Input word from I/O port specified in dx into
+//								memory location specified in es:(r/e)di
+//								cx store the repeat times
+#define port_insw(port, buffer, index)					\
+	__asm__ __volatile__	(							\
+				"cld	\n\t"							\
+				"rep	\n\t"							\
+				"insw	\n\t"							\
+				"mfence	\n\t"							\
+				:										\
+				:"d"(port),	"D"(buffer), "c"(index)		\
+				:"memory"								\
+			)
 
-
+// outsw 
+// output word specified in es:(r/e)si into dx
+#define port_outsw(port, buffer, index)					\
+	__asm__ __volatile__	(							\
+				"cld	\n\t"							\
+				"rep	\n\t"							\
+				"outsw	\n\t"							\
+				"mfence	\n\t"							\
+				:										\
+				:"d"(port),	"S"(buffer), "c"(index)		\
+				:"memory"								\
+			)
 
 #endif

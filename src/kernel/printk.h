@@ -26,6 +26,12 @@
 #define ORANGE	0x00ff8000
 #define	INDIGO	0x0000ffff
 #define	PURPLE	0x008000ff
+#define ONE_GREEN	0x92cd7b
+#define ONE_BLUE	0x55b7fe
+#define ONE_BLUE_LIGHT	0x61afef
+#define ONE_AQUA	0xc4bdb5
+#define ONE_YELLOW	0xda62dd
+#define ONE_PURPLE	0xc678dd
 
 // 使用font.h中的ascii字符像素矩阵
 extern unsigned char font_ascii[256][16];
