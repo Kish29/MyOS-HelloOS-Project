@@ -21,13 +21,109 @@
 #define PAGE_4K_MASK	(~ (PAGE_4K_SIZE - 1))
 
 // 将传入的物理页起始地址按照2MB/4KB对齐
-#define PAGE_2M_ALIGN(addr)	(((unsigned long)(addr) + PAGE_2M_SIZE) & PAGE_2M_MASK)
-#define PAGE_4K_ALIGN(addr)	(((unsigned long)(addr) + PAGE_4K_SIZE) & PAGE_4K_MASK)
+// '-1'的目的是考虑到地址刚好为2MB的倍数的时候，不会加1
+#define PAGE_2M_ALIGN(addr)	(((unsigned long)(addr) + PAGE_2M_SIZE - 1) & PAGE_2M_MASK)
+#define PAGE_4K_ALIGN(addr)	(((unsigned long)(addr) + PAGE_4K_SIZE - 1) & PAGE_4K_MASK)
 
 // 操作系统不直接操作物理地址
 #define Virtual_To_Physic(addr)	((unsigned long)(addr) - KERNEL_START_OFFSET)
 // 因为操作系统操作的是虚拟地址（线性地址）,所以要将它转化为指针类型，方便调用时使用
 #define Physic_To_Virtual(addr)	((unsigned long *)((unsigned long)(addr) + KERNEL_START_OFFSET))
+
+// 根据虚拟地址获得对应某个2MB页表
+#define	Virtual_To_2M_Page(knl_addr) (memory_management_struct.pages_struct + (Virtual_To_Physic(knl_addr) >> PAGE_2M_SHIFT))
+// 根据物理地址获得对应的某个2MB页表
+#define Physic_To_2M_Page(knl_addr) (memory_management_struct.pages_struct + ((unsigned long)knl_addr >> PAGE_2M_SHIFT))
+
+/*******************
+ * 定义2MB page的属性
+ *******************/
+// bit-63 Execution Disable
+// #define PAGE_XD		(unsigned long)0x8000000000000000
+#define PAGE_XD		(1UL << 63)
+
+// bit-12 Page Atrribute Table
+// #define PAGE_PAT	(unsigned long)0x1000
+#define PAGE_PAT	(1UL << 12)
+
+// bit-8 Global Page->  1:global,	0:local 
+// #define PAGE_Global	(unsigned long)0x0100
+#define PAGE_Global	(1UL << 8)
+
+// bit-7 Page Size->	1:big page(maybe 1GB/2MB)	0:small page 
+// #define PAGE_PS		(unsigned long)0x0080
+#define	PAGE_PS		(1UL << 7)
+
+// bit-6 Page Dirty->	1:dirty,	0:clean 
+// #define PAGE_Dirty	(unsigned long)0x0040 
+#define PAGE_Dirty	(1UL << 6)
+
+// bit-5 Page Accessed->	1:visited	0:unvisited
+// #define PAGE_Accessed	(unsigned long)0x0020 
+#define PAGE_Accessed	(1UL << 5)
+
+// bit-4 Page Level Cache Disable->		1:not permitted		0:permitted
+// #define PAGE_PCD	(unsigned long)0x0010 
+#define	PAGE_PCD	(1UL << 4)
+
+// bit-3 Page Level Write Back->		1:write-through		0:write-back
+// #define	PAGE_PWT	(unsigned long)0x0008
+#define	PAGE_PWT	(1UL << 3)
+
+// bit-2 Page User/Supervisor->			1:user and supervisor	0:supervisor
+// #define PAGE_U_S	(unsigned long)0x0004
+#define	PAGE_U_S	(1UL << 2)
+
+// bit-1 Page Write/Read->		1:Read/Write	0:Read
+// #define	PAGE_R_W	(unsigned long)0x0002
+#define	PAGE_R_W	(1UL << 1)
+
+// bit-0 Page Present->		1:present	0:not present 
+// #define	PAGE_Present	(unsigned long)0x0001
+#define PAGE_Present	(1UL << 0)
+
+// bit-0,1
+#define PAGE_KERNEL_GDT		(PAGE_R_W | PAGE_Present)
+
+// bit-0,1
+#define PAGE_KERNEL_Dir		(PAGE_R_W | PAGE_Present)
+
+// bit-0,1,7
+#define PAGE_KERNEL_PAGE	(PAGE_PS | PAGE_R_W | PAGE_Present)
+
+// bit-0,1,2
+#define PAGE_USER_Dir		(PAGE_U_S | PAGE_R_W | PAGE_Present)
+
+// bit-0,1,2,7
+#define PAGE_USER_PAGE		(PAGE_PS | PAGE_U_S | PAGE_R_W | PAGE_Present)
+
+/*定义各层级的页表描述符*/
+
+typedef struct {
+	unsigned long pml4t;
+}pml4t_t;
+#define mk_pml4t(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
+#define set_pml4t(pml4t_ptr, pml4t_val)		(*(pml4t_ptr) = (pml4t_val))
+
+typedef struct {
+	unsigned long pdpt;
+}pdpt_t;
+#define mk_pdpt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
+#define set_pdpt(pdpt_ptr, pdpt_val)		(*(pdpt_ptr) = (pdpt_val))
+
+typedef struct {
+	unsigned long pdt;
+}pdt_t;
+#define mk_pdt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
+#define set_pdt(pdt_ptr, pdt_val)		(*(pdt_ptr) = (pdt_val))
+
+typedef struct {
+	unsigned long pt;
+}pt_t;
+#define mk_pt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
+#define set_pt(pt_ptr, pt_val)		(*(pt_ptr) = (pt_val))
+
+unsigned long *Global_CR3 = NULL;
 
 // 为对齐数据，全部采用int类型
 // struct Memory_E820_Format {
@@ -44,6 +140,29 @@ struct E820 {
 	unsigned int type;
 }__attribute__((packed));	// packed修饰该结构体不生成对齐空间，改用紧凑格式，保证每个结构体20B
 
+/* 自定义页结构体属性
+ * 在分配页的时候用到
+ * */
+#define PG_PTable_Maped		(1 << 0)
+
+#define PG_Kernel_Init		(1 << 1)
+
+#define PG_Referenced		(1 << 2)
+
+#define PG_Dirty			(1 << 3)
+
+#define PG_Active			(1 << 4)
+
+#define PG_Up_To_Date		(1 << 5)
+
+#define PG_Device			(1 << 6)
+
+#define	PG_Kernel			(1 << 7)
+
+#define	PG_Knl_Share_To_Usr	(1 << 8)
+
+#define	PG_Slab				(1 << 9)
+
 /* 定义2MB物理页的结构体
  */
 struct Page {
@@ -54,10 +173,21 @@ struct Page {
 	unsigned long created_time;		// 本页的创建时间
 };
 
+
+
+/* 自定义内存管理结构Zone的属性
+ * 再分配页的时候将用到
+ * */
+#define ZONE_DMA		(1 << 0)
+
+#define ZONE_NORMAL		(1 << 1)
+
+#define ZONE_UNMAPED	(1 << 2)
+
 /* 区域内存管理结构体 */
 struct Zone {
 	struct Page *page_group;		// 指向本区域所管理的page结构体数组指针
-	unsigned long page_nums;		// 本区域所管理的page数组长度
+	unsigned long pages_num;		// 本区域所管理的page数组长度
 
 	unsigned long zone_addr_start;
 	unsigned long zone_addr_end;
@@ -71,6 +201,22 @@ struct Zone {
 
 	unsigned long page_total_referenced;	// 本区域物理页被引用次数总数
 };
+
+// 记录一些Zone的索引index
+int ZONE_DMA_INDEX = 0;			// DMA部分的内存专供I/O设备DMA中断
+// 因为DMA使用物理地址访问内存，不经过MMU，并且需要连续的缓冲区，所以需要特定预留
+
+int ZONE_NORMAL_INDEX = 0;		// 内核可以自由使用
+
+// 在之前的head.S中，已经定义了512个2MB的页表项，囊括了1GB的物理空间
+// 一直到0x100000000物理地址之前
+// 那么超出这个地址之后后的物理空间还没有经过页表的映射
+int ZONE_UNMAPED_INDEX = 0;
+
+// max zone num 
+#define MAX_NR_ZONES	10
+
+
 
 /* 全局内存管理结构体 */
 struct Global_Memory_Descriptor {
@@ -96,6 +242,14 @@ struct Global_Memory_Descriptor {
 
 extern struct Global_Memory_Descriptor memory_management_struct;
 
+unsigned long page_init(struct Page *page, unsigned long flags);
+
+unsigned long page_clean(struct Page *page);
+
 void init_memory();
+
+struct Page *alloc_pages(int zone_select, int number, unsigned long page_flags);
+
+
 
 #endif

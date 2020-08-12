@@ -51,7 +51,7 @@ void _init_kernel(void) {
 	memory_management_struct.code_start_addr = (unsigned long) &_text;	// 获得代码区域的起始地址
 	memory_management_struct.code_end_addr = (unsigned long) &_etext;
 	memory_management_struct.data_end_addr = (unsigned long) &_edata;
-	memory_management_struct.data_end_addr = (unsigned long) &_end;
+	memory_management_struct.kernel_end_addr = (unsigned long) &_end;
 
 	// char *s = "jiangaoranjiangaoran";
 
