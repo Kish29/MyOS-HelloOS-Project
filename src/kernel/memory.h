@@ -123,6 +123,7 @@ typedef struct {
 #define mk_pt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
 #define set_pt(pt_ptr, pt_val)		(*(pt_ptr) = (pt_val))
 
+// CR3保存的最高层页基地址
 unsigned long *Global_CR3 = NULL;
 
 // 为对齐数据，全部采用int类型
@@ -208,9 +209,7 @@ int ZONE_DMA_INDEX = 0;			// DMA部分的内存专供I/O设备DMA中断
 
 int ZONE_NORMAL_INDEX = 0;		// 内核可以自由使用
 
-// 在之前的head.S中，已经定义了512个2MB的页表项，囊括了1GB的物理空间
-// 一直到0x100000000物理地址之前
-// 那么超出这个地址之后后的物理空间还没有经过页表的映射
+// bochs虚拟机最大物理内存4GB，超出这部分的需要重新映射
 int ZONE_UNMAPED_INDEX = 0;
 
 // max zone num 
@@ -250,6 +249,33 @@ void init_memory();
 
 struct Page *alloc_pages(int zone_select, int number, unsigned long page_flags);
 
+// invlpg -> flush the page entry which is specified
+#define	flush_tlb_one(addr)	\
+	__asm__	__volatile__	("invlpg	(%0)	\n\t"::"r"(addr):"memory")
 
+// 重新赋值cr3寄存器，刷新TLB，使新的页表项有效
+#define	flush_tlb()								\
+do {											\
+	unsigned long tmp_reg;						\
+	__asm__	__volatile__	(					\
+				"movq	%%cr3,	%0		\n\t"	\
+				"movq	%0,		%%cr3	\n\t"	\
+				:"=r"(tmp_reg)					\
+				:								\
+				:"memory"						\
+			);									\
+}while(0)
+
+unsigned long *Get_CR3();
+inline unsigned long *Get_CR3() {
+	unsigned long *bsc_addr_in_cr3_ptr;
+	__asm__	__volatile__	(
+				"movq	%%cr3,	%0	\n\t"
+				:"=r"(bsc_addr_in_cr3_ptr)
+				:
+				:"memory"
+			);
+	return bsc_addr_in_cr3_ptr;
+}
 
 #endif

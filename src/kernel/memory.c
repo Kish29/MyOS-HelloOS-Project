@@ -1,5 +1,5 @@
-#include "memory.h"
 #include "lib.h"
+#include "memory.h"
 
 void init_memory() {
 	int i, j;
@@ -79,12 +79,14 @@ void init_memory() {
 	color_printk(ONE_PURPLE, BLACK, "Total Memory Size is:%#018lx=%#018ld, And The Nums of 2MB PAGE(S) for Total:%#010x=%#010d\n", total_mem, total_mem, memory_management_struct.bits_num, memory_management_struct.bits_num);
 	
 	// 向上按照long型数据进行对齐
-	// bits_map的数据类型是unsigned long(8B), bits_map的每一个bit位代表一个Page结构体，置位(1)代表已使用/ROM，复位(0)代表空闲
+	// bits_map的数据类型是unsigned long(8B), bits_map的每一个bit位代表一个Page结构体
+	// 而每一行bits_map(8B)能够代表64个物理页
+	// 置位(1)代表已使用/ROM，复位(0)代表空闲
 	// bits_len = 264B，1B=8bit -> 8 Pages
 	memory_management_struct.bits_len = ((memory_management_struct.bits_num + sizeof(long) * 8 - 1) / 8) & (~(sizeof(long) - 1));
 	// 预设置全为1，以标注内存空洞和ROM
 	memset(memory_management_struct.bits_map, 0xff, memory_management_struct.bits_len);
-	
+
 
 	/* 初始化 Pages Struct */
 	memory_management_struct.pages_struct = (struct Page *)(((unsigned long)memory_management_struct.bits_map + memory_management_struct.bits_len + PAGE_4K_SIZE - 1) & (PAGE_4K_MASK));
@@ -141,14 +143,14 @@ void init_memory() {
 		page = zone->page_group;
 		for(j = 0; j < zone->pages_num; j++, page++) {
 			page->zone_struct = zone;
-			page->phy_addr_start = start_addr + PAGE_4K_SIZE * j;
+			page->phy_addr_start = start_addr + PAGE_2M_SIZE * j;		// 不要写成了PAGE_4K_SHIFT，不然下面bits_map置位的时候由于偏移量沒统一导致重复置位同一bit导致异常
 			page->attr = 0;
 
 			page->referenced_count = 0;
 			page->created_time = 0;
-			
+
 			// 这儿 >> 6位，就是除以2^6=64
-			// 和配置的bits_map每一项8B相对应
+			// 和配置的bits_map每一项8B(每一项64个物理页)相对应
 			// 同理，右边 -> '%64'获得余数即对应的bit(page号)，从右往左看
 			// 用异或操作对相应的bit位置0，表示该区域是可用RAM
 			*(memory_management_struct.bits_map + ((page->phy_addr_start >> PAGE_2M_SHIFT) >> 6)) ^= (1UL << ((page->phy_addr_start >> PAGE_2M_SHIFT) % 64));
@@ -195,9 +197,7 @@ void init_memory() {
 		color_printk(ONE_PURPLE, BLACK, "zone%d_start_addr:%#018lx, zone%d_end_addr:%#018lx, zone%d_length:%#018lx=%#018ld\n", i, z->zone_addr_start, i, z->zone_addr_end, i, z->zone_length, z->zone_length);
 		color_printk(ONE_PURPLE, BLACK, "zone%d:\npage_group:%#018lx, page_num:%#018lx=%#018ld\n", i, z->page_group, z->pages_num, z->pages_num);
 
-		// 在之前的head.S中，已经定义了512个2MB的页表项，囊括了1GB的物理空间
-		// 一直到0x100000000物理地址之前
-		// 那么超出这个地址之后后的物理空间还没有经过页表的映射
+		// bochs虚拟机最大物理内存4GB，超出这部分的需要重新映射
 		if(z->zone_addr_start == 0x100000000)
 			ZONE_UNMAPED_INDEX = i;		// 记录Zone的索引
 	}
@@ -206,25 +206,197 @@ void init_memory() {
 	memory_management_struct.end_of_struct = (unsigned long)((unsigned long)memory_management_struct.zones_struct + memory_management_struct.zones_len + sizeof(long) * 32) & (~(sizeof(long) - 1));
 	
 	// 打印在main.c文件中初始化的code_start_code等符号的地址
-	color_printk(ONE_GREEN, BLACK, "code_start_addr:%#018lx, code_end_addr:%#018lx, data_end_addr:%#018lx, kernel_end_addr:%#018lx",memory_management_struct.code_start_addr, memory_management_struct.code_end_addr, memory_management_struct.data_end_addr, memory_management_struct.kernel_end_addr);
+	color_printk(ONE_GREEN, BLACK, "code_start_addr:%#018lx, code_end_addr:%#018lx, data_end_addr:%#018lx\nkernel_end_addr:%#018lx, end_of_struct:%#018lx\n",memory_management_struct.code_start_addr, memory_management_struct.code_end_addr, memory_management_struct.data_end_addr, memory_management_struct.kernel_end_addr, memory_management_struct.end_of_struct);
 	
+	// 将内核于内存管理结构所占用的物理页一个一个初始化(所占用的物理页到end_of_struct结束)
+	i = Virtual_To_Physic(memory_management_struct.end_of_struct) >> PAGE_2M_SHIFT; // 得到2MB物理页数量
+	// 初始化
+	for(j = 0; j < i; j++) {
+		page_init(memory_management_struct.pages_struct + j, PG_PTable_Maped | PG_Kernel_Init | PG_Active | PG_Kernel);
+	}
+
+	Global_CR3 = Get_CR3();
+	// 打印验证cr3
+	color_printk(ONE_INDIGO, BLACK, "Global_CR3:\t%#018lx\n", Global_CR3);
+	// head.S中"movq $0x10100, cr3"保存的是物理地址，
+	// 而在head.S中定义的低层页表项的地址却是线性地址，所以要转化成线性地址
+	// 虽然这些线性地址映射的物理地址和直接*Global_CR3是一样的，但是按照逻辑，这样处理更好
+	// 然后根据IA-32e模式的寻址模式，'*'取内容得到该线性地址的保存值
+	// 这儿与'0xff'求与是剔除掉低位的属性，防止寻址出错
+	color_printk(ONE_INDIGO, BLACK, "*Global_CR3:\t%#018lx\n", *Physic_To_Virtual(Global_CR3) & (~ 0xff));
+	// color_printk(ONE_INDIGO, BLACK, "*Global_CR3: \t%#018lx\n", *Global_CR3 & (~0xff));
+	// color_printk(ONE_INDIGO, BLACK, "**Global_CR3:\t%#018lx\n", *((unsigned long *)(*Global_CR3 & (~ 0xff))) & (~ 0xff));
+	color_printk(ONE_INDIGO, BLACK, "**Global_CR3:\t%#018lx\n", *Physic_To_Virtual(*Physic_To_Virtual(Global_CR3) & (~ 0xff)) & (~ 0xff));
 
 
+	// 消除一致性页表映射，先清零PML4的前10个物理页表
+	// 因为内核所使用的线性地址是0xffff80... -> 0xffffff...，那么按照页表映射，去除0xffff的符号，0x8...选择PML4的第256项及其之后的项
+	// 在head.S中，第256项和第0项都被定义成0x102007
+	// 而用户所使用的线性地址为0x0000000 -> 0x00007fffff...，那么按照也表映射，去除0x0000的符号，0x0.. -> 0x7选择PML4的第0项到255项
+	// 所以，为了防止用户以及应用程序访问到内核的页表，需要将第一个置0，起保护作用
+	for(i = 0; i< 10; i++)
+		*(Physic_To_Virtual(Global_CR3 + i)) = 0UL;
+
+	// 刷新TLB使其生效
+	flush_tlb();
+}
 
 
+unsigned long page_init(struct Page *page, unsigned long flags) {
+	// 如果是新的未初始化的页
+	if(page->attr == 0) {
+		// 置位
+		*(memory_management_struct.bits_map + ((page->phy_addr_start >> PAGE_2M_SHIFT) >> 6)) |= (1UL << ((page->phy_addr_start >> PAGE_2M_SHIFT) % 64));
+		page->attr = flags;
+		page->referenced_count++;
+		page->zone_struct->page_using_count++;
+		page->zone_struct->page_free_count--;
+		page->zone_struct->page_total_referenced++;
+	} else if((page->attr & PG_Referenced) || (page->attr & PG_Knl_Share_To_Usr) || (flags & PG_Referenced) || (flags & PG_Knl_Share_To_Usr)) {
+		// 如果该页被使用或者是内核用户共用页
+		page->attr |= flags;
+		page->referenced_count++;
+		page->zone_struct->page_total_referenced++;
+	} else {
+		// 置位
+		*(memory_management_struct.bits_map + ((page->phy_addr_start >> PAGE_2M_SHIFT) >> 6)) |= (1UL << ((page->phy_addr_start >> PAGE_2M_SHIFT) % 64));
+		page->attr |= flags;
+	}
+	return 0;
+}
 
 
+unsigned long page_clean(struct Page *page) {
+	if(page->attr == 0)
+		return 0;
+	// 如果该页已经被引用或者具有共享属性
+	else if((page->attr & PG_Referenced) || (page->attr & PG_Knl_Share_To_Usr)) {
+		page->referenced_count--;
+		page->zone_struct->page_total_referenced--;
+		// 如果此时该页没有了引用
+		if(page->referenced_count == 0) {
+			page->attr = 0;
+			page->zone_struct->page_using_count++;
+			page->zone_struct->page_free_count++;
+		}
+	} else {		// 其他情况释放
+		// 复位
+		*(memory_management_struct.bits_map + ((page->phy_addr_start >> PAGE_2M_SHIFT) >> 6)) &= ~(1UL << ((page->phy_addr_start >> PAGE_2M_SHIFT) % 64));
+		
+		page->attr = 0;
+		page->referenced_count = 0;
+		page->zone_struct->page_free_count++;
+		page->zone_struct->page_using_count--;
+		page->zone_struct->page_total_referenced--;
+	}
+
+	return 0;
+}
 
 
+/*	number <= 64
+ *	zone_select: select from DMA, mapped in pagetable, unmapped in pagetable
+ *	page_flags: struct Page attribute
+ * */
+struct Page *alloc_pages(int zone_select, int number, unsigned long page_flags) {
+	int i;
+	// page 记录找到的连续number个空闲物理页的偏移
+	unsigned long page = 0;
 
+	int zone_start = 0;
+	int zone_end = 0;
 
+	// 选择相应的zone
+	switch(zone_select) {
+		case ZONE_DMA:		// 1
+			zone_start = 0;
+			zone_end = ZONE_DMA_INDEX;
+			break;
 
+		case ZONE_NORMAL:	// 2
+			zone_start = ZONE_DMA_INDEX;
+			zone_end = ZONE_NORMAL_INDEX;
+			break;
 
+		case ZONE_UNMAPED:	// 4
+			zone_start = ZONE_UNMAPED_INDEX;
+			zone_end = memory_management_struct.zones_num - 1;
+			break;
 
+		default:
+			color_printk(RED, BLACK, "alloc_pages error by zone_select index\n");
+			return NULL;
+			break;
+	}
 
+	// 遍历该部分的所有的Zone区域，寻找符合申请条件的struct page 结构体数组
+	for(i = zone_start; i <= zone_end; i++) {
+		struct Zone *z;
+		unsigned long j;
+		unsigned long start, end, len;
+		unsigned long tmp;
 
+		if((memory_management_struct.zones_struct + i)->page_free_count < number)
+			continue;
 
+		z = memory_management_struct.zones_struct + i;
+		start = z->zone_addr_start >> PAGE_2M_SHIFT;	// page 起始索引
+		end = z->zone_addr_end >> PAGE_2M_SHIFT;		// page 结束索引
+		len = z->zone_length >> PAGE_2M_SHIFT;			// 该区域page数量
 
+		// 这部分画图容易理解，tmp是离下一个bits_map的差值
+		tmp = 64 - (start % 64);
 
+		// j变量设置成unsigned long的原因是为了数据对齐
+		// 该循环第一次只能检索bits_map中tmp个bit位
+		// 之后检测64个bit位
+		for(j = start; j <= end; j += (j % 64? tmp: 64)) {		//自增部分是为了让第二次及以后每次从
+			// bits_map的第0位开始检测64个bit位
+			// 找到bits_map数组索引项
+			unsigned long *pg_in_bitsmap_ptr = memory_management_struct.bits_map + (j >> 6);
+			unsigned long shift = j % 64;		// bit偏移位置
+			unsigned long k;
 
+			// num是根据申请内存数量在8B的数据上进行了置位操作
+			// 如：number = 3 -> num: ...00011b
+			unsigned long num = (1UL << number) - 1;
+			for(k = shift; k < 64; k++) {
+				// 判断内存页是否是空闲状态
+				// 为了检索出连续的number个(<=64)空闲物理页
+				// (k ? ((*p >> k) | (*(p + 1) << (64 - k)) 这段代码的作用是
+				// 将当前高（64-k）位和下一组底k位组合成一个新的64bit数据和num求与，从而判断出一个连续的number个物理页 
+				// 示意图：
+				// 当前的检索状态          k
+				// +-----------------------+----+
+				// |***********************|    |   <- p
+				// +-----------------------+----+
+				// |                       |xxxx|   <- p + 1
+				// +-----------------------+----+
+				// 整合后的判断值:
+				//       k                 k
+				// +-----+-----------------+----+
+				// |xxxxx|**********************|
+				// +-----+-----------------+----+
+				if(((k ? ((*pg_in_bitsmap_ptr >> k) | (*(pg_in_bitsmap_ptr + 1) << (64 - k))) : *pg_in_bitsmap_ptr) & num ) == 0) {	// k = 0说明在起始bit处
+					// 如果找到连续number个空闲
+					unsigned long l;
+					// page 记录找到的连续number个空闲物理页的偏移
+					page = j + k - 1;
+					// 分配number个物理页
+					for(l = 0; l < (unsigned long)number; l++) {
+						struct Page *x = memory_management_struct.pages_struct + page + l;
+						page_init(x, page_flags);
+					}
+					goto alloc_pages_succeed;
+				}
+			}
+		}
+	}
+
+	// 如果申请失败
+	return NULL;
+
+alloc_pages_succeed:
+	
+	return (struct Page *)(memory_management_struct.pages_struct + page);
 }

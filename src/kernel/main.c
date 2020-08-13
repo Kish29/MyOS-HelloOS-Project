@@ -22,6 +22,10 @@ extern char _end;
 struct Global_Memory_Descriptor memory_management_struct = {{0}, 0};
 
 void _init_kernel(void) {
+
+	int i = 0;
+
+
 	/* initialize screen information
 	 * */
 	pos_info._x_resolution = 1280;
@@ -73,6 +77,25 @@ void _init_kernel(void) {
 	// color_printk(ONE_GREEN, BLACK, "after memset, this is s:%s\n", s);
 	color_printk(ONE_PURPLE, BLACK, "Memory Init \n");
 	init_memory();
+
+	/* test for page allocate */
+
+	struct Page *page = NULL;
+
+
+	color_printk(ONE_BLUE_LIGHT, BLACK, "Before alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
+	color_printk(ONE_BLUE_LIGHT, BLACK, "Before alloc_pages\t*(memory_management_struct.bits_map + 1):\t %#018lx\n", *(memory_management_struct.bits_map + 1));
+
+	page = alloc_pages(ZONE_NORMAL, 32, PG_PTable_Maped | PG_Active | PG_Kernel);
+
+	for(i = 0; i <= 32; i++) {
+		color_printk(ONE_GREEN, BLACK, "page%d\tattr:%#018lx\taddr:%#018lx\t", i, (page + i)->attr, (page + i)->phy_addr_start);
+		i++;
+		color_printk(ONE_GREEN, BLACK, "page%d\tattr:%#018lx\taddr:%#018lx\n", i, (page + i)->attr, (page + i)->phy_addr_start);
+	}
+
+	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
+	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*(memory_management_struct.bits_map + 1):\t %#018lx\n", *(memory_management_struct.bits_map + 1));
 
 	while(1);
 }

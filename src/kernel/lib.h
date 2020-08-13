@@ -6,7 +6,6 @@
 #define	__LIB_H__ 
 
 #define	NULL 0
-typedef unsigned char bool;
 #define true 1
 #define false 0
 
@@ -38,7 +37,7 @@ void list_add_to_tail(struct _list *tail, struct _list *node);
 
 int list_delete(struct _list *del_node);
 
-bool list_is_empty(struct _list *node);
+unsigned char list_is_empty(struct _list *node);
 
 struct _list *get_node_prev(struct _list *node);
 
@@ -92,9 +91,10 @@ inline void list_add_to_tail(struct _list *tail, struct _list *node) {
 inline int list_delete(struct _list *del_node) {
 	del_node->next->prev = del_node->prev;
 	del_node->prev->next = del_node->next;
+	return 0;
 }
 
-inline bool list_is_empty(struct _list *node) {
+inline unsigned char list_is_empty(struct _list *node) {
 	if(node->next == node && node->prev == node)
 		return	true;
 	else 

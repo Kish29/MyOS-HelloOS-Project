@@ -73,11 +73,12 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 		sign = (type & PLUS) ? '+': ((type & SPACE) ? ' ': 0);
 	if(sign)
 		size--;	//留出一个区域显示符号
-	if(type & SPECIAL)
+	if(type & SPECIAL) {
 		if(base == 16)
 			size -= 2;	// 显示0x或者0X
 		else if(base == 8)
 			size--;
+	}
 	i = 0;
 	if(num == 0)
 		tmp[i++] = '0';
@@ -88,7 +89,8 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 		precision = i;
 	size -= precision;	// 获取剩下的显示区域宽度
 	if(!(type&(ZEROPAD + LEFT)))	// 不是左对齐或者零填充，前面填充空格
-		*str++ = ' ';
+		while(size-- > 0)
+			*str++ = ' ';
 	if(sign)
 		*str++ = sign;
 	if(type & SPECIAL)
@@ -338,7 +340,11 @@ int color_printk(unsigned int front_color, unsigned int back_color, const char *
 			/* (pos_info._x_position + tab_val) &~ (tab_val - 1))
 			 * 向下取tab_val的整数倍，line等于离下一个tab符的还需要多少个空格
 			 */
-			line = ((pos_info._x_position + tab_val) &~ (tab_val - 1)) - pos_info._x_position;
+			// 注意，因为每次显示一个字符后，_x_position加了字符的x轴大小(8)
+			// 所以，_x_position永远是tab_val的整数倍，导致line的值一定总是tab_val
+			// 正确的做法是_x_position先除以_x_char_size再进行计算
+			int pos_by_char = pos_info._x_position / pos_info._x_char_size;
+			line = ((pos_by_char + tab_val) & (~(tab_val - 1))) - pos_by_char;
 prt_tab:
 			line--;
 			putchar(pos_info._frame_buf_addr, pos_info._x_resolution, pos_info._x_position, pos_info._y_position, front_color, back_color, ' ');
