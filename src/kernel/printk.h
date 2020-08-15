@@ -58,6 +58,7 @@ struct position_info {
 	unsigned long _frame_buf_length;
 }pos_info;
 
+
 /* 获取余数的宏定义
  */
 #define do_div(n, base) ({ \

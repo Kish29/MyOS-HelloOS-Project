@@ -217,7 +217,7 @@ void init_memory() {
 
 	Global_CR3 = Get_CR3();
 	// 打印验证cr3
-	color_printk(ONE_INDIGO, BLACK, "Global_CR3:\t%#018lx\n", Global_CR3);
+	color_printk(ONE_INDIGO, BLACK, "Global_CR3:\t\t%#018lx\n", Global_CR3);
 	// head.S中"movq $0x10100, cr3"保存的是物理地址，
 	// 而在head.S中定义的低层页表项的地址却是线性地址，所以要转化成线性地址
 	// 虽然这些线性地址映射的物理地址和直接*Global_CR3是一样的，但是按照逻辑，这样处理更好
@@ -239,6 +239,12 @@ void init_memory() {
 
 	// 刷新TLB使其生效
 	flush_tlb();
+
+	color_printk(ONE_BLUE, BLACK, "After setting CR3 and flushing TLB\n");
+	color_printk(ONE_INDIGO, BLACK, "*0xffff800000101800:\t%#018lx\n", (*((unsigned long *)0xffff800000101800) & (~ 0xff)));
+	color_printk(ONE_INDIGO, BLACK, "*0xffff800000102000:\t%#018lx\n", (*((unsigned long *)0xffff800000102000) & (~ 0xff)));
+	color_printk(ONE_INDIGO, BLACK, "*0xffff800000103000:\t%#018lx\n", (*((unsigned long *)0xffff800000103000) & (~ 0xff)));
+	color_printk(ONE_INDIGO, BLACK, "*0xffff800000103028:\t%#018lx\n", (*((unsigned long *)0xffff800000103028) & (~ 0xff)));
 }
 
 
