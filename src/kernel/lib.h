@@ -345,6 +345,7 @@ inline void clear_screen(unsigned long *buf_addr, unsigned long buf_sz) {
 	__asm__	__volatile__	(
 				"decq	%1			\n\t"
 				"js		2f			\n\t"
+				"incq	%1			\n\t"
 				"1:					\n\t"
 				"movq	$0,	(%0)	\n\t"
 				"incq	%0			\n\t"
