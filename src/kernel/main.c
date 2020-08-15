@@ -96,6 +96,11 @@ void _init_kernel(void) {
 
 	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
 	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*(memory_management_struct.bits_map + 1):\t %#018lx\n", *(memory_management_struct.bits_map + 1));
+	
+	clear_screen((unsigned long *)pos_info._frame_buf_addr, pos_info._frame_buf_length);
+
+	color_printk(ONE_PURPLE, BLACK, "After Clear Screen\n");
+	color_printk(ONE_PURPLE, BLACK, "The Second Line\n");
 
 	while(1);
 }

@@ -71,6 +71,8 @@ unsigned char io_in8(unsigned short port);
 
 unsigned int io_in32(unsigned short port);
 
+void clear_screen(unsigned long *buf_addr, unsigned long buf_sz);
+
 void io_out8(unsigned short port, unsigned char value);
 
 
@@ -337,6 +339,24 @@ inline int strlen(char *str) {
 			);
 	return __res;
 }
+
+
+inline void clear_screen(unsigned long *buf_addr, unsigned long buf_sz) {
+	__asm__	__volatile__	(
+				"decq	%1			\n\t"
+				"js		2f			\n\t"
+				"1:					\n\t"
+				"movq	$0,	(%0)	\n\t"
+				"incq	%0			\n\t"
+				"decq	%1			\n\t"
+				"jnz	1b			\n\t"
+				"2:	"
+				:
+				:"D"(buf_addr), "c"(buf_sz)
+				:"memory"
+			);
+}
+
 
 // Intel Volumn 1: insw m16, dx :
 //								Input word from I/O port specified in dx into
