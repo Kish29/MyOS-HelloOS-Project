@@ -7,6 +7,7 @@
 #include "trap.h"
 #include "gate.h"
 #include "memory.h"
+#include "interrupt.h"
 
 /* 全局化Kernel.lds中的标示符
  * 在main.c中声明后，在连接的过程中
@@ -80,7 +81,7 @@ void _init_kernel(void) {
 
 	/* test for page allocate */
 
-	struct Page *page = NULL;
+	/* struct Page *page = NULL;
 
 
 	color_printk(ONE_BLUE_LIGHT, BLACK, "Before alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
@@ -100,7 +101,12 @@ void _init_kernel(void) {
 	clear_screen((unsigned long *)pos_info._frame_buf_addr, pos_info._frame_buf_length);
 
 	color_printk(ONE_PURPLE, BLACK, "After Clear Screen\n");
-	color_printk(ONE_PURPLE, BLACK, "The Second Line\n");
+	color_printk(ONE_PURPLE, BLACK, "The Second Line\n"); */
+
+	color_printk(ONE_PURPLE, BLACK, "interrupt init\n");
+	// 清空8024键盘控制寄存器缓冲区
+	cls_8024_kybd_buf();
+	init_interrupt();
 
 	while(1);
 }

@@ -61,6 +61,8 @@ int strncmp(char *_first_str, char *_second_str, long num);
 
 int strlen(char *str);
 
+void clear_screen(unsigned long *buf_addr, unsigned long buf_sz);
+
 unsigned long bit_set(unsigned long *addr, unsigned long index);
 
 unsigned long bit_get(unsigned long *addr, unsigned long index);
@@ -69,12 +71,14 @@ unsigned long bit_clean(unsigned long *addr, unsigned long index);
 
 unsigned char io_in8(unsigned short port);
 
-unsigned int io_in32(unsigned short port);
-
-void clear_screen(unsigned long *buf_addr, unsigned long buf_sz);
-
 void io_out8(unsigned short port, unsigned char value);
 
+unsigned int io_in32(unsigned short port);
+
+void io_out32(unsigned short port, unsigned int value);
+
+// 清空8024的读写缓冲区
+void cls_8024_kybd_buf();
 
 inline void list_init(struct _list *list) {
 	list->prev = list;
@@ -358,6 +362,79 @@ inline void clear_screen(unsigned long *buf_addr, unsigned long buf_sz) {
 			);
 }
 
+
+inline unsigned long bit_set(unsigned long *addr, unsigned long index) {
+	return *addr | (1UL << index);
+}
+
+inline unsigned long bit_get(unsigned long *addr, unsigned long index) {
+	return *addr & (1UL << index);
+}
+
+inline unsigned long bit_clean(unsigned long *addr, unsigned long index) {
+	return *addr & (~ (1UL << index));
+}
+
+// inb -> get value form port specified in dx
+inline unsigned char io_in8(unsigned short port) {
+	unsigned char ret = 0;
+	__asm__ __volatile__ (
+				"inb	%%dx,	%0		\n\t"
+				"mfence					\n\t"
+				:"=&a"(ret)
+				:"d"(port)
+				:"memory"
+			);
+	return ret;
+}
+
+inline unsigned int io_in32(unsigned short port) {
+	unsigned int ret = 0;
+	__asm__ __volatile__ (
+				"inl	%%dx,	%0		\n\t"
+				"mfence					\n\t"
+				:"=&a"(ret)
+				:"d"(port)
+				:"memory"
+			);
+	return ret;
+}
+
+// write value into port specified in dx
+inline void io_out8(unsigned short port, unsigned char value) {
+	__asm__ __volatile__	(
+				"outb	%0,		%%dx	\n\t"
+				"mfence					\n\t"
+				:
+				:"a"(value), "d"(port)
+				:"memory"
+			);
+}
+
+inline void io_out32(unsigned short port, unsigned int value) {
+	__asm__ __volatile__	(
+				"outl	%0,		%%dx	\n\t"
+				"mfence					\n\t"
+				:
+				:"a"(value), "d"(port)
+				:"memory"
+			);
+}
+
+inline void cls_8024_kybd_buf() {
+	__asm__ __volatile__	(
+				"1:						\n\t"
+				"inb	$0x64,	%%al	\n\t"
+				"and	$0x1,	%%al	\n\t"
+				"jz		2f				\n\t"
+				"inb	$0x60,	%%al	\n\t"
+				"jmp	1b				\n\t"
+				"2:"
+				:
+				:
+				:"memory", "ax"
+			);
+}
 
 // Intel Volumn 1: insw m16, dx :
 //								Input word from I/O port specified in dx into
