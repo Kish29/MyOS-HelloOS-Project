@@ -288,6 +288,11 @@ repeat:
  * 如果是const char* 或者 char *，按照C语言的实验，则需要查找定位参数中的'%s、%d'等等
  */
 int color_printk(unsigned int front_color, unsigned int back_color, const char *fmt, ...) {
+
+	// 首先清除白色矩形块
+	putchar(pos_info._frame_buf_addr, pos_info._x_resolution, pos_info._x_position, pos_info._y_position, BLACK, BLACK, 0);
+
+
 	// str_len是vsprintf函数格式化后的字符串长度
 	int str_len = 0;
 	int count = 0;
@@ -333,9 +338,10 @@ int color_printk(unsigned int front_color, unsigned int back_color, const char *
 				pos_info._x_position = (pos_info._x_resolution / pos_info._x_char_size - 1) * pos_info._x_char_size;
 				// 回退到上一行
 				pos_info._y_position -= pos_info._y_char_size;
-				putchar(pos_info._frame_buf_addr, pos_info._x_resolution, pos_info._x_position, pos_info._y_position, front_color, back_color, ' ');
-				// 光标x、y位置不用变化
 			}
+			putchar(pos_info._frame_buf_addr, pos_info._x_resolution, pos_info._x_position, pos_info._y_position, front_color, back_color, ' ');
+			// 光标x、y位置不用变化
+			
 		} else if((unsigned char)*(buf + count) == '\t') {
 			/* (pos_info._x_position + tab_val) &~ (tab_val - 1))
 			 * 向下取tab_val的整数倍，line等于离下一个tab符的还需要多少个空格
@@ -366,5 +372,9 @@ prt_tab:
 			// 也可以回到原点
 		}
 	}
+
+	// 在当前光标位置显示白色方块
+	// 直接取巧，让字体和背景色均为白色就是白色矩形块
+	putchar(pos_info._frame_buf_addr, pos_info._x_resolution, pos_info._x_position, pos_info._y_position, WHITE, WHITE, 0);
 	return str_len;
 }

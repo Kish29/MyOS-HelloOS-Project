@@ -4,6 +4,9 @@
 #include "printk.h"
 #include "gate.h"
 #include "memory.h"
+#include "kybd.h"
+
+const char *key_code = "\0~1234567890-=\b\tqwertyuiop[]\n\0asdfghjkl;'`^\\zxcvbnm,./^\0\0 \0";
 
 // 保存现场，由于没有错误码，所以不使用entry.S中的error_code_prefix
 #define SAVE_ALL						\
@@ -143,16 +146,29 @@ void init_interrupt() {
 
 
 void do_IRQ(unsigned long rsp, unsigned long index) {
-	unsigned char x;
+	if(index == 0x21) {
+		kybd_itrpt();
+		return;
+	}
+	// unsigned char x;
 	color_printk(ONE_BLUE_LIGHT, BLACK, "do_IRQ:%#08x\t", index);
+	// 读取0x60处的键盘缓冲区字符
+	// x = io_in8(0x60);
+	// color_printk(ONE_BLUE_LIGHT, BLACK, "key code:%#08x\t", x);
 	// 向OCW2号寄存器bit-5发送置位信息
-	x = io_in8(0x60);
-	color_printk(ONE_BLUE_LIGHT, BLACK, "key code:%#08x\t", x);
 	io_out8(0x20, 0x20);
 }
 
 
-
+inline void kybd_itrpt() {
+	unsigned char k = io_in8(0x60);
+	if( 2 <= k && k <= 0x3a) {
+		unsigned char c = key_code[k];
+		if(c != '\0')
+			color_printk(WHITE, BLACK, "%c", c);
+	}// 向OCW2号寄存器bit-5发送置位信息
+	io_out8(0x20, 0x20);
+}
 
 
 
