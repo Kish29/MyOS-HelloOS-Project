@@ -8,6 +8,7 @@
 #include "gate.h"
 #include "memory.h"
 #include "interrupt.h"
+#include "task.h"
 
 /* 全局化Kernel.lds中的标示符
  * 在main.c中声明后，在连接的过程中
@@ -48,7 +49,8 @@ void _init_kernel(void) {
 
 	unsigned long tss_bean = 0xffff800000007c00;
 	// 由于使用的是2MB物理页，低21-bit作为offset，所以就是使用内存0x7c00处作为栈顶
-	set_TSS64(tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean);
+	color_printk(ONE_PURPLE, BLACK, "_stack_start:%#018lx\n", _stack_start);
+	set_TSS64(_stack_start, _stack_start, _stack_start, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean);
 
 	sys_idt_vector_init();
 
@@ -58,55 +60,16 @@ void _init_kernel(void) {
 	memory_management_struct.data_end_addr = (unsigned long) &_edata;
 	memory_management_struct.kernel_end_addr = (unsigned long) &_end;
 
-	// char *s = "jiangaoranjiangaoran";
-
-	// char *s2 = "ioioioioioioioioioiioioioiioioioi\0";
-
-	// color_printk(ONE_GREEN, BLACK, "this is s:%s\n", s);
-	// memcpy(s, s2, 19);
-
-	// color_printk(ONE_GREEN, BLACK, "after memcpy, this is s:%s\n", s);
-	// color_printk(ONE_GREEN, BLACK, "and this is s2:%s\n", s2);
-
-	// color_printk(ONE_GREEN, BLACK, "this is s:%s\n", s);
-	// strncpy(s, s2, 20);
-	// color_printk(ONE_GREEN, BLACK, "after strncpy(), this is s2:%s\n", s2);
-
-
-	// memset(s, 97, 19);
-
-	// color_printk(ONE_GREEN, BLACK, "after memset, this is s:%s\n", s);
 	color_printk(ONE_PURPLE, BLACK, "Memory Init \n");
 	init_memory();
-
-	/* test for page allocate */
-
-	/* struct Page *page = NULL;
-
-
-	color_printk(ONE_BLUE_LIGHT, BLACK, "Before alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
-	color_printk(ONE_BLUE_LIGHT, BLACK, "Before alloc_pages\t*(memory_management_struct.bits_map + 1):\t %#018lx\n", *(memory_management_struct.bits_map + 1));
-
-	page = alloc_pages(ZONE_NORMAL, 32, PG_PTable_Maped | PG_Active | PG_Kernel);
-
-	for(i = 0; i <= 32; i++) {
-		color_printk(ONE_GREEN, BLACK, "page%d\tattr:%#018lx\taddr:%#018lx\t", i, (page + i)->attr, (page + i)->phy_addr_start);
-		i++;
-		color_printk(ONE_GREEN, BLACK, "page%d\tattr:%#018lx\taddr:%#018lx\n", i, (page + i)->attr, (page + i)->phy_addr_start);
-	}
-
-	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*memory_management_struct.bits_map:\t\t%#018lx\n", *memory_management_struct.bits_map);
-	color_printk(ONE_BLUE_LIGHT, BLACK, "After alloc_pages\t*(memory_management_struct.bits_map + 1):\t %#018lx\n", *(memory_management_struct.bits_map + 1));
-	
-	clear_screen((unsigned long *)pos_info._frame_buf_addr, pos_info._frame_buf_length);
-
-	color_printk(ONE_PURPLE, BLACK, "After Clear Screen\n");
-	color_printk(ONE_PURPLE, BLACK, "The Second Line\n"); */
 
 	color_printk(ONE_PURPLE, BLACK, "interrupt init\n");
 	// 清空8024键盘控制寄存器缓冲区
 	cls_8024_kybd_buf();
 	init_interrupt();
+
+	color_printk(ONE_PURPLE, BLACK, "task init\n");
+	task_init();
 
 	while(1);
 }

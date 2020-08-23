@@ -12,8 +12,8 @@ all: system
 # binary 以二进制格式将处理好的input->system输出到output->kernel.bin中
 # 使用objcopy工具的原因是因为kernel是内核程序，不是应用程序，所以要转换从二进制格式，并且移除冗余数据
 
-system: head.o entry.o main.o printk.o trap.o memory.o interrupt.o
-	ld -b elf64-x86-64 -z muldefs -o system head.o entry.o main.o printk.o trap.o memory.o interrupt.o -T Kernel.lds 
+system: head.o entry.o main.o printk.o trap.o memory.o interrupt.o task.o
+	ld -b elf64-x86-64 -z muldefs -o system head.o entry.o main.o printk.o trap.o memory.o interrupt.o task.o -T Kernel.lds 
 # 注意顺序
 # -b 指定输入的文件格式
 #  -T 链接过程提供脚本文件
@@ -46,6 +46,9 @@ memory.o: memory.c
 
 interrupt.o: interrupt.c
 	gcc $(CFLAGS) interrupt.c
+
+task.o: task.c
+	gcc $(CFLAGS) task.c
 
 .PHONY: clean 
 

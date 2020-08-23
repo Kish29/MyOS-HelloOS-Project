@@ -33,6 +33,7 @@
 #define ONE_YELLOW	0xda62dd
 #define ONE_PURPLE	0xc678dd
 #define	ONE_INDIGO	0x4fbbc2
+#define ONE_RED		0xe06c75
 
 // 使用font.h中的ascii字符像素矩阵
 extern unsigned char font_ascii[256][16];

@@ -9,9 +9,12 @@
 #define true 1
 #define false 0
 
+/* container_of函数将根据一个成员变量的地址推算出父结构体的地址
+ * 其精髓在于使用地址0使p先得到member在整个内存中的地址(第一行代码)
+ * 然后再减去member相对于单个结构体的偏移就是父结构体在内存中的偏移 */
 #define container_of(ptr, type, member)			\
 ({												\
-	typeof(((type *)0)->member) * p = ptr;		\
+	typeof(((type *)0)->member) * p = (ptr);		\
 	(type *)((unsigned long)p - (unsigned long)&(((type *)0)->member));	\
 })
 
@@ -144,7 +147,6 @@ inline void *memcpy(void *src, void *des, long num) {
 }
 
 /* 作者的版本
-
 inline void * memcpy(void *From,void * To,long Num)
 {
 	int d0,d1,d2;

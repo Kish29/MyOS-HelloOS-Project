@@ -102,24 +102,28 @@
 typedef struct {
 	unsigned long pml4t;
 }pml4t_t;
+
 #define mk_pml4t(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
 #define set_pml4t(pml4t_ptr, pml4t_val)		(*(pml4t_ptr) = (pml4t_val))
 
 typedef struct {
 	unsigned long pdpt;
 }pdpt_t;
+
 #define mk_pdpt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
 #define set_pdpt(pdpt_ptr, pdpt_val)		(*(pdpt_ptr) = (pdpt_val))
 
 typedef struct {
 	unsigned long pdt;
 }pdt_t;
+
 #define mk_pdt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
 #define set_pdt(pdt_ptr, pdt_val)		(*(pdt_ptr) = (pdt_val))
 
 typedef struct {
 	unsigned long pt;
 }pt_t;
+
 #define mk_pt(addr, attr)	((unsigned long)(addr) | (unsigned long)(attr))
 #define set_pt(pt_ptr, pt_val)		(*(pt_ptr) = (pt_val))
 

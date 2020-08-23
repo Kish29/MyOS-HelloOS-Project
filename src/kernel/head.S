@@ -8,11 +8,13 @@
 */ 
 // .section 伪指令声明代码段 .text
 
+#include "linkage.h"
+
 .section .text
 
-.global _start // _start 指定程序起始位置
+// .global _start // _start 指定程序起始位置
 
-_start:
+ENTRY(_start)
 	// 初始化数据段
 	mov	$0x10,	%ax
 	mov %ax,	%ds
@@ -83,7 +85,8 @@ entry64:
 	movq	%rax,	%es 
 	movq	%rax,	%gs 
 	movq	%rax,	%ss	
-	movq	$0xffff800000007e00,	%rsp	/* rsp address */
+	// 这儿必须改为init_task_union的rsp地址
+	movq	_stack_start(%rip),	%rsp	/* rsp address */
 
 /* 为IDT表添加一个ignore_int中断函数 */
 /* IDT门描述符:
@@ -235,8 +238,15 @@ Loop:
 
 int_msg:
 	.asciz	"Unknown interrupt or fault at RIP\n"
+
 	/* 用ascii声明一个文本字符串，且被预定义，放在内存中 */
 	/* asciz 与ascii 不同的地方在于末尾要添加一个'\0'*/
+
+ENTRY(_stack_start)
+	.quad	init_task_union + 32678
+	// 栈顶指针位置
+
+
 /********************** 接下来是页的4层不同描述符 ***********************/
 
 .align	8	// 8B 对齐
