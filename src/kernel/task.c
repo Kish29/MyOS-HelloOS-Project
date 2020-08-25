@@ -171,6 +171,9 @@ void task_init() {
 	p = container_of(get_node_next(&current->list), struct task_struct, list);
 
 	color_printk(ONE_RED, BLACK, "p->thread->rip:%#018lx\n", p->thread->rip);
+
+	show_rsp();
+
 	switch_to(current, p);
 }
 

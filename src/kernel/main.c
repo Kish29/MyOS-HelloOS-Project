@@ -25,6 +25,8 @@ struct Global_Memory_Descriptor memory_management_struct = {{0}, 0};
 
 void _init_kernel(void) {
 
+
+
 	int i = 0;
 
 
@@ -65,7 +67,7 @@ void _init_kernel(void) {
 
 	color_printk(ONE_PURPLE, BLACK, "interrupt init\n");
 	// 清空8024键盘控制寄存器缓冲区
-	cls_8024_kybd_buf();
+	// cls_8024_kybd_buf();
 	init_interrupt();
 
 	color_printk(ONE_PURPLE, BLACK, "task init\n");

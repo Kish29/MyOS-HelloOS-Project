@@ -83,6 +83,8 @@ void io_out32(unsigned short port, unsigned int value);
 // 清空8024的读写缓冲区
 void cls_8024_kybd_buf();
 
+void show_rsp();
+
 inline void list_init(struct _list *list) {
 	list->prev = list;
 	list->next = list;
@@ -466,4 +468,14 @@ inline void cls_8024_kybd_buf() {
 				:"memory"								\
 			)
 
+#include "printk.h"
+
+inline void show_rsp() {
+	unsigned long rsp;
+	__asm__	__volatile__ (
+				"movq	%%rsp,	%0"
+				:"=m"(rsp)
+			);
+	color_printk(ONE_BLUE, BLACK, "current rsp->%#018lx\n", rsp);
+}
 #endif

@@ -233,8 +233,8 @@ inline void switch_to(struct task_struct *prev, struct task_struct *next) {
 	__asm__ __volatile__ (
 			"pushq	%%rbp				\n\t"
 			"pushq	%%rax				\n\t"
-			// "movq	%%rcx,	%%rsp			\n\t"
-			"movq	%%rcx,	%0			\n\t"
+			"movq	%%rsp,	%0			\n\t"
+			"movq	%2,	%%rsp			\n\t"
 			// "leaq	1f(%%rip),	%%rax	\n\t"
 			// "movq	%%rax,	%1			\n\t"
 			// "pushq	%3					\n\t"
@@ -243,7 +243,7 @@ inline void switch_to(struct task_struct *prev, struct task_struct *next) {
 			"popq	%%rax				\n\t"
 			"popq	%%rbp				\n\t"
 			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)
-			:"c"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
+			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
 			:"memory"
 			);
 
