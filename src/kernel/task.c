@@ -97,7 +97,7 @@ __asm__ (
 );
 
 
-inline unsigned long init(unsigned long arg) {
+unsigned long init(unsigned long arg) {
 	color_printk(ONE_RED, BLACK, "init task is running, arg:%#018lx\n", arg);
 	/* need complete
 	 */
@@ -123,6 +123,9 @@ inline unsigned long kernel_thread(unsigned long (*fn)(unsigned long), unsigned 
 
 	regs.rflags = (1 << 9);			// 置位IF标志位(响应外部中断)
 	regs.rip = (unsigned long)kernel_thread_func;			// 如果该进程是应用层，则需要转换为ret_from_itrpt
+
+	color_printk(WHITE, BLACK, "regs.rip:%#018lx\n", regs.rip);
+
 	// 从当前进程fork出新的进程
 	return do_fork(&regs, flags, 0, 0);
 }
@@ -170,6 +173,5 @@ void task_init() {
 	color_printk(ONE_RED, BLACK, "p->thread->rip:%#018lx\n", p->thread->rip);
 	switch_to(current, p);
 }
-
 
 

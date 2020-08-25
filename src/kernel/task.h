@@ -201,25 +201,60 @@ inline struct task_struct *get_current() {
 
 
 // 传入task_struct
-#define switch_to(prev, next)				\
-do {										\
-	__asm__	__volatile__	(				\
-			"pushq	%%rbp				\n\t"	\
-			"pushq	%%rax				\n\t"	\
-			"movq	%%rsp,	%0			\n\t"	\
-			"movq	%2,	%%rsp			\n\t"	\
-			"leaq	1f(%%rip),	%%rax	\n\t"	\
-			"movq	%%rax,	%1			\n\t"	\
-			"pushq	%3					\n\t"	\
-			"jmp	__switch_to			\n\t"	\
-			"1:							\n\t"	\
-			"popq	%%rax				\n\t"	\
-			"popq	%%rbp				\n\t"	\
-			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)		\
-			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)		\
-			:"memory"			\
-		);				\
-}while(0)
+// #define switch_to(prev, next)				\
+// do {										\
+// 	__asm__	__volatile__	(				\
+// 			"pushq	%%rbp				\n\t"	\
+// 			"pushq	%%rax				\n\t"	\
+// 			"movq	%%rsp,	%0			\n\t"	\
+// 			"movq	%2,	%%rsp			\n\t"	\
+// 			"leaq	1f(%%rip),	%%rax	\n\t"	\
+// 			"movq	%%rax,	%1			\n\t"	\
+// 			"pushq	%3					\n\t"	\
+// 			"jmp	__switch_to			\n\t"	\
+// 			"1:							\n\t"	\
+// 			"popq	%%rax				\n\t"	\
+// 			"popq	%%rbp				\n\t"	\
+// 			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)		\
+// 			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)		\
+// 			:"memory"			\
+// 		);				\
+// }while(0)
+
+
+void switch_to(struct task_struct *prev, struct task_struct *next);
+
+inline void switch_to(struct task_struct *prev, struct task_struct *next) {
+
+	color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
+	color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
+
+
+	__asm__ __volatile__ (
+			"pushq	%%rbp				\n\t"
+			"pushq	%%rax				\n\t"
+			// "movq	%%rcx,	%%rsp			\n\t"
+			"movq	%%rcx,	%0			\n\t"
+			// "leaq	1f(%%rip),	%%rax	\n\t"
+			// "movq	%%rax,	%1			\n\t"
+			// "pushq	%3					\n\t"
+			// "jmp	__switch_to			\n\t"
+			// "1:							\n\t"
+			"popq	%%rax				\n\t"
+			"popq	%%rbp				\n\t"
+			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)
+			:"c"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
+			:"memory"
+			);
+
+	color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
+	color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
+
+	color_printk(ONE_RED, BLACK, "Here is while(1) circle\n");
+
+	while(1);
+}
+
 
 // 进程切换工作
 void __switch_to(struct task_struct *prev, struct task_struct *next);
@@ -235,9 +270,11 @@ inline void __switch_to(struct task_struct *prev, struct task_struct *next) {
 	__asm__ __volatile__ ("movq	%0,	%%fs	\n\t"::"a"(next->thread->fs));
 	__asm__ __volatile__ ("movq	%0,	%%gs	\n\t"::"a"(next->thread->gs));
 
+	color_printk(WHITE, BLACK, "next->thread->rip:%#018lx\n", next->thread->rip);
 	color_printk(WHITE, BLACK, "prev->thread->rsp0:%#018lx\n", prev->thread->rsp0);
 	color_printk(WHITE, BLACK, "next->thread->rsp0:%#018lx\n", next->thread->rsp0);
 }
+
 
 unsigned long do_fork(struct pt_regs *regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size);
 

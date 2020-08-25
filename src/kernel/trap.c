@@ -216,7 +216,7 @@ void do_page_fault(unsigned long rsp, unsigned long error_code) {
 	
 	color_printk(RED, BLACK, "\n");
 
-	color_printk(RED, BLACK, "CR2:%018lx\n", cr2);
+	color_printk(RED, BLACK, "CR2:%#018lx\n", cr2);
 
 	while(1);
 }
