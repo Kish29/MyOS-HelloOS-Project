@@ -237,13 +237,15 @@ inline void switch_to(struct task_struct *prev, struct task_struct *next) {
 			"leaq	1f(%%rip),	%%rax	\n\t"
 			"movq	%%rax,	%1			\n\t"
 			"pushq	%3					\n\t"
+			// __switch_to函数的ret返回时，相当于popq	%rip 
+			// 所以要提前将next进程的函数入口kernel_thread_func压入栈中
 			"jmp	__switch_to			\n\t"
 			"1:							\n\t"
 			"popq	%%rax				\n\t"
 			"popq	%%rbp				\n\t"
 			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)
 			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
-			:"memory", "ax"
+			:"memory", "ax"		// 这儿必须声明对ax寄存器的修改！！！！
 			);
 
 	// color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);

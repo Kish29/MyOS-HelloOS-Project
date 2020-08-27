@@ -109,3 +109,122 @@ c. 中断/异常的现场保护工作入口的地方，少写了个pushq	%rbx。
 ### HelloOS v0.0.10  <font size=2><u>2020.8.24</u></font>
 1. 简单的进程算是写完了，但是出现了一个bug，switch_to函数的内嵌asm中，给rsp赋值的操作直接导致了页错误异常，现在还没有弄明白究竟是什么原因，明天问问老师
 > 最近挺忙的，开学了，还有小学期得上，进程这一块儿也比较难啃，加油奥利给！
+
+
+### HelloOS v0.0.10  <font size=2><u>2020.8.27</u></font>
+接上面的bug修复部分，问题主要出现在task.h和task.c中，
+一共有3处faltal error，
+
+#### 自己的测试部分
+#### 1. 在task.h中，有如下的代码:
+
+上次我为了测试rsp赋值的情况，写了如下的asm内嵌汇编代码
+```asm
+	pushq	%%rbp
+	pushq	%%rax
+	pushq	%%rsp,	%0
+	pushq	%2，	%%rsp
+	popq	%%rax
+	popq	%%rbp
+```
+问题出现在后面从栈中弹出rax和rbp值的时候，由于之前压入rax和rbp的时候，rsp在另一个栈中
+
+而当我re-assign rsp后，栈基地址的发生了改变，所以当执行popq	%%rax和popq	%%rbp的时候
+
+是找不到原先的rax和rbp的值的
+
+
+所以当然会出现页错误
+
+
+#### 真正的错误之处（2个）：
+#### 2. 在对prev->thread->rip进行赋值的时候：
+
+我将popq	%%rax处的地址保存在了rax寄存器中
+>代码  leaq	1f(%%rip),	%%rax
+
+<font color=red>而没有在内嵌汇编的损坏部分声明对ax寄存器的修改</font>导致抛出了异常
+
+所以必须得在损坏部分加上ax寄存器，让编译器提前做好ax寄存器的保存工作，使得能够正常编译
+
+```asm
+	__asm__ __volatile__ (
+			"pushq	%%rbp				\n\t"
+			"pushq	%%rax				\n\t"
+			"movq	%%rsp,	%0			\n\t"
+			"movq	%2,	%%rsp			\n\t"
+			"leaq	1f(%%rip),	%%rax	\n\t"
+			"movq	%%rax,	%1			\n\t"
+			"pushq	%3					\n\t"
+			// __switch_to函数的ret返回时，相当于popq	%rip 
+			// 所以要提前将next进程的函数入口kernel_thread_func压入栈中
+			"jmp	__switch_to			\n\t"
+			"1:							\n\t"
+			"popq	%%rax				\n\t"
+			"popq	%%rbp				\n\t"
+			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)
+			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
+			:"memory", "ax"		// 这儿必须声明对ax寄存器的修改！！！！
+			);
+```
+
+#### 3. 如上代码，进入__switch_to函数是通过段间跳转指令jmp __switch_to实现的，<font color=red>而并不是使用callq进行的跳转，</font>所以为了能够在__switch_to函数返回时，能正确的回到下一个进程的函数入口
+<font color=red>将next->thread->rip压入了栈的返回地址处</font>
+
+>代码	pushq	%3<font color=red>将下一个进程的rip放在了__switch_to函数ret(ret指令相当于popq	%rip)取值处</font>
+
+而next->thread->rip是通过task.c的kernel_thread函数进行赋值的：
+```c
+inline unsigned long kernel_thread(unsigned long (*fn)(unsigned long), unsigned long arg, unsigned long flags) {
+	// 为将要创建的进程分配新的寄存器的值
+	struct pt_regs regs;
+	// 初始化为0
+	memset(&regs, 0, sizeof(regs));
+
+	// 保存函数地址和参数
+	regs.rbx = (unsigned long)fn;
+	regs.rdx = (unsigned long)arg;
+
+	regs.ds = KERNEL_DS;
+	regs.es = KERNEL_DS;
+	regs.cs = KERNEL_CS;
+	regs.ss = KERNEL_DS;
+
+	regs.rflags = (1 << 9);			// 置位IF标志位(响应外部中断)
+	regs.rip = (unsigned long)kernel_thread_func;			// 如果该进程是应用层，则需要转换为ret_from_itrpt
+
+	color_printk(WHITE, BLACK, "regs.rip:%#018lx\n", regs.rip);
+
+	// 从当前进程fork出新的进程
+	return do_fork(&regs, flags, 0, 0);
+}
+```
+可以看到代码<font color=red>**regs.rip = (unsigned long)kernel_thread_func**</font> 为下一个进程的入口进行赋值，而kernel_thread_func是这样在task.c中进行定义的：
+```c
+
+extern void kernel_thread_func(void);
+__asm__ (
+	"kernel_thread_func:		\n\t"
+	"popq	%r15				\n\t"
+	"popq	%r14				\n\t"
+```
+
+
+而我反复进行调试的时候发现，next->thread->rip的值总是不正确的(比如负数或者特别大的数)，所以考虑可能是编译器在进行编译的时候，并没有对这个函数进行全局化的处理，所以在kernel_thread_fun前面加上.global伪描述符
+```c
+extern void kernel_thread_func(void);
+__asm__ (
+	".global kernel_thread_func	\n\t"
+	"kernel_thread_func:		\n\t"
+	"popq	%r15				\n\t"
+	"popq	%r14				\n\t"
+```
+
+
+
+
+
+让编译器进行函数的全局化处理
+
+修复这2个bug后，kenel终于能正确运行了！！！！
+> 无数次的debug...和无数次的情况尝试....
