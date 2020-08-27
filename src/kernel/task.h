@@ -258,6 +258,7 @@ inline void switch_to(struct task_struct *prev, struct task_struct *next) {
 // 进程切换工作
 void __switch_to(struct task_struct *prev, struct task_struct *next);
 
+// __switch_to函数最好定义为inline或者是extern
 inline void __switch_to(struct task_struct *prev, struct task_struct *next) {
 	init_tss[0].rsp0 = next->thread->rsp0;
 

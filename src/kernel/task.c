@@ -132,7 +132,6 @@ inline unsigned long kernel_thread(unsigned long (*fn)(unsigned long), unsigned 
 }
 
 
-
 void task_init() {
 	// new task_struct ---
 	struct task_struct *p = NULL;
