@@ -67,6 +67,7 @@ unsigned long do_fork(struct pt_regs *regs, unsigned long clone_flags, unsigned 
 // 因为在do_fork函数中，fork出的进程的栈空间进行了regs的复制，rsp此时指向栈顶向下偏移pt_regs大小的地方
 extern void kernel_thread_func(void);
 __asm__ (
+	".global kernel_thread_func	\n\t"
 	"kernel_thread_func:		\n\t"
 	"popq	%r15				\n\t"
 	"popq	%r14				\n\t"

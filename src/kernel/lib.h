@@ -478,4 +478,19 @@ inline void show_rsp() {
 			);
 	color_printk(ONE_BLUE, BLACK, "current rsp->%#018lx\n", rsp);
 }
+
+
+void re_assign_rsp(unsigned long new_rsp);
+
+void re_assign_rsp(unsigned long new_rsp) {
+	color_printk(ONE_BLUE, BLACK, "new_rsp->%#018lx\n", new_rsp);
+	__asm__ __volatile__ (
+				"movq	%0, %%rsp	\n\t"
+				:
+				:"a"(new_rsp)
+			);
+}
+
+
+
 #endif

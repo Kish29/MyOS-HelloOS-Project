@@ -54,7 +54,9 @@ void _init_kernel(void) {
 	color_printk(ONE_PURPLE, BLACK, "_stack_start:%#018lx\n", _stack_start);
 	set_TSS64(_stack_start, _stack_start, _stack_start, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean, tss_bean);
 
+	color_printk(ONE_PURPLE, BLACK, "idt vector init\n");
 	sys_idt_vector_init();
+
 
 	/* 获取标示符所对应的地址 */
 	memory_management_struct.code_start_addr = (unsigned long) &_text;	// 获得代码区域的起始地址
@@ -67,7 +69,7 @@ void _init_kernel(void) {
 
 	color_printk(ONE_PURPLE, BLACK, "interrupt init\n");
 	// 清空8024键盘控制寄存器缓冲区
-	// cls_8024_kybd_buf();
+	cls_8024_kybd_buf();
 	init_interrupt();
 
 	color_printk(ONE_PURPLE, BLACK, "task init\n");

@@ -226,33 +226,32 @@ void switch_to(struct task_struct *prev, struct task_struct *next);
 
 inline void switch_to(struct task_struct *prev, struct task_struct *next) {
 
-	color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
-	color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
-
+	// color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
+	// color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
 
 	__asm__ __volatile__ (
 			"pushq	%%rbp				\n\t"
 			"pushq	%%rax				\n\t"
 			"movq	%%rsp,	%0			\n\t"
 			"movq	%2,	%%rsp			\n\t"
-			// "leaq	1f(%%rip),	%%rax	\n\t"
-			// "movq	%%rax,	%1			\n\t"
-			// "pushq	%3					\n\t"
-			// "jmp	__switch_to			\n\t"
-			// "1:							\n\t"
+			"leaq	1f(%%rip),	%%rax	\n\t"
+			"movq	%%rax,	%1			\n\t"
+			"pushq	%3					\n\t"
+			"jmp	__switch_to			\n\t"
+			"1:							\n\t"
 			"popq	%%rax				\n\t"
 			"popq	%%rbp				\n\t"
 			:"=m"(prev->thread->rsp), "=m"(prev->thread->rip)
 			:"m"(next->thread->rsp), "m"(next->thread->rip), "D"(prev), "S"(next)
-			:"memory"
+			:"memory", "ax"
 			);
 
-	color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
-	color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
+	// color_printk(ONE_RED, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
+	// color_printk(ONE_RED, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
 
-	color_printk(ONE_RED, BLACK, "Here is while(1) circle\n");
+	// color_printk(ONE_RED, BLACK, "Here is while(1) circle\n");
 
-	while(1);
+	// while(1);
 }
 
 
@@ -273,6 +272,11 @@ inline void __switch_to(struct task_struct *prev, struct task_struct *next) {
 	color_printk(WHITE, BLACK, "next->thread->rip:%#018lx\n", next->thread->rip);
 	color_printk(WHITE, BLACK, "prev->thread->rsp0:%#018lx\n", prev->thread->rsp0);
 	color_printk(WHITE, BLACK, "next->thread->rsp0:%#018lx\n", next->thread->rsp0);
+	color_printk(WHITE, BLACK, "prev->thread->rsp:%#018lx\n", prev->thread->rsp);
+	color_printk(WHITE, BLACK, "next->thread->rsp:%#018lx\n", next->thread->rsp);
+
+	// color_printk(ONE_BLUE, BLACK, "Here is while(1) circle in __switch_to method\n");
+	// while(1);
 }
 
 
