@@ -370,6 +370,8 @@ prt_tab:
 			pos_info._y_position = 0;
 			// x轴不动
 			// 也可以回到原点
+			// 调用清屏函数，清空屏幕内容
+			clear_screen((unsigned long *)pos_info._frame_buf_addr, pos_info._frame_buf_length);
 		}
 	}
 

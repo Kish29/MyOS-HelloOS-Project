@@ -17,6 +17,34 @@ unsigned long do_exit(unsigned long arg) {
 	while(1);
 }
 
+unsigned long system_call_function(struct pt_regs *regs) {
+	return system_call_table[regs->rax](regs);			// 根据entry.S中rdi传进来的参数就是pt_regs结构体起始地址-
+}
+
+
+void user_level_function() {
+	// color_printk(ONE_GREEN, ONE_RED, "user_level_function is running...\n");
+
+	while(1);
+}
+
+unsigned long do_execve(struct pt_regs * regs) {
+	// 传入的regs参数指针就是当前进程的栈指针
+	// 设置rdx(装入rip)和rcx(装入rsp)
+	regs->rdx = 0x800000;		// rdx->rip
+	regs->rcx = 0xa00000;	// rcx->rsp		// 2MB物理页
+	// 返回值
+	regs->rax = 1;
+	regs->es = 0;
+	regs->ds = 0;		// 用户数据段
+
+	color_printk(ONE_GREEN, BLACK, "do_execve task is running...\n");
+
+	memcpy((void *)user_level_function, (void *)0x800000, 1024);		// 1KB 
+
+	return 0;
+}
+
 
 
 unsigned long do_fork(struct pt_regs *regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size) {
@@ -54,8 +82,8 @@ unsigned long do_fork(struct pt_regs *regs, unsigned long clone_flags, unsigned 
 	thrd->rip = regs->rip;
 	thrd->rsp = (unsigned long)tsk + STACK_SIZE - sizeof(struct pt_regs);
 
-	if(!(tsk->flags & PF_KTHREAD))	// 如果是应用层，应当从中断处返回
-		thrd->rip = regs->rip = (unsigned long)ret_from_itrpt;
+	if(!(tsk->flags & PF_KTHREAD))	// 如果是应用层，应当从系统调用处返回
+		thrd->rip = regs->rip = (unsigned long)ret_from_system_call;
 	
 	tsk->state = TASK_RUNNING;
 
@@ -98,10 +126,29 @@ __asm__ (
 );
 
 
+// 修改init进程，使其跳转到应用层(使用ret_from_system_call/sysexit)
 unsigned long init(unsigned long arg) {
+
+	struct pt_regs *regs;
+
 	color_printk(ONE_RED, BLACK, "init task is running, arg:%#018lx\n", arg);
-	/* need complete
-	 */
+	
+	// 设置init函数的rip执行代码地址以及rsp
+	current->thread->rip = (unsigned long)ret_from_system_call;
+	current->thread->rsp = (unsigned long)current + STACK_SIZE - sizeof(struct pt_regs);	// 此时rsp就是pt_regs的起始地址
+
+	// regs绑定当前进程的pt_regs结构体起始地址
+	regs = (struct pt_regs *)current->thread->rsp;
+
+	__asm__	__volatile__	(
+				"movq	%1,	%%rsp	\n\t"
+				"pushq	%2	\n\t"			// 压入ret_from_system_call的执行地址
+				"jmp	do_execve	\n\t"
+				:
+				:"D"(regs), "m"(current->thread->rsp), "m"(current->thread->rip)
+				:"memory"
+			);
+
 	return 1;
 }
 
@@ -153,6 +200,12 @@ void task_init() {
 	init_mm.end_brk = memory_management_struct.kernel_end_addr;
 
 	init_mm.start_stack = _stack_start;		// defined in head.S
+
+	// 为系统调用的两个指令sysenter/sysexit设置MSR寄存器组
+	wrmsr(0x174, KERNEL_CS);
+	wrmsr(0x175, current->thread->rsp);
+	wrmsr(0x176, (unsigned long)system_call);
+
 
 	// 初始化为init进程的tss表
 	set_TSS64(init_thread.rsp0, init_tss[0].rsp1, init_tss[0].rsp2, init_tss[0].ist1, init_tss[0].ist2, init_tss[0].ist3, init_tss[0].ist4, init_tss[0].ist5, init_tss[0].ist6, init_tss[0].ist7);

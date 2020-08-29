@@ -46,8 +46,8 @@ void _init_kernel(void) {
 	// 每个像素4B
 	pos_info._frame_buf_length = pos_info._x_resolution * pos_info._y_resolution * 4;
 
-	// TSS表的索引在GDT表的第9项
-	load_TR(9);
+	// TSS表的索引在GDT表的第10项
+	load_TR(10);
 
 	unsigned long tss_bean = 0xffff800000007c00;
 	// 由于使用的是2MB物理页，低21-bit作为offset，所以就是使用内存0x7c00处作为栈顶

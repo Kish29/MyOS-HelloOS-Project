@@ -140,9 +140,9 @@ setup_TSS:
 	addq	%rcx,	%rax 
 	addq	$103,	%rax 
 	leaq	GDT_Table(%rip),	%rdi	
-	movq	%rax,	72(%rdi)	/*第9号段*/
+	movq	%rax,	80(%rdi)	/*第9号段*/
 	shrq	$32,	%rdx 
-	movq	%rdx,	80(%rdi)
+	movq	%rdx,	88(%rdi)
 
 
 /* TR寄存器结构32/64-bit，注意：不可见部分均由段选择子从GDT中加载到TR寄存器中
@@ -162,7 +162,7 @@ setup_TSS:
 	// 注：TR寄存器在ltr指令加载完tss段描述符后，其B(Busy)标志位被置位，此时重复加载TR寄存器
 	// 会触发#TS异常
 	// main中加载了tr，所以这儿注释掉
-	// movw	$72,	%ax 
+	// movw	$80,	%ax 
 	// ltr		%ax			/* TR 任务状态断寄存器保存的是段选择子和描述符信息 */
 
 /* 接下来的部分将进入0xffff800000000000的地址 */
@@ -268,7 +268,8 @@ __PML4E:
 .org	0x2000 
 __PDPTE:
 	
-	.quad	0x103003	// 3 ->	超级模式、可读写、已存在
+	// .quad	0x103003	// 3 ->	超级模式、可读写、已存在
+	.quad	0x103007	// 7 ->	用户模式、可读写、已存在
 	.fill	511, 8, 0
 
 // 三级页
@@ -277,11 +278,11 @@ __PDE:
 	
 	// 每张表占用2MB物理也，按2递增
 	// 前 5 x 2 = 10MB 物理内存的页描述
-	.quad	0x000083	//表0	// 83 -> 1000_0011 2MB物理页：超级模式、可读写、存在
-	.quad	0x200083	//表1	// 那么按照2MB物理也，指令的底21位将用来作为偏移量
-	.quad	0x400083	//表2	// 那么按照PML4E的描述符
-	.quad	0x600083	//表3	// 实际上 0x000083 描述符，将物理地址0x0 映射到	Canonical线性地址 的
-	.quad	0x800083	//表4	// 0x0和0xffff800000000000处
+	// .quad	0x000083	//表0	// 83 -> 1000_0011 2MB物理页：超级模式、可读写、存在
+	// .quad	0x200083	//表1	// 那么按照2MB物理也，指令的底21位将用来作为偏移量
+	// .quad	0x400083	//表2	// 那么按照PML4E的描述符
+	// .quad	0x600083	//表3	// 实际上 0x000083 描述符，将物理地址0x0 映射到	Canonical线性地址 的
+	// .quad	0x800083	//表4	// 0x0和0xffff800000000000处
 
 
 	/* 后 8 x 2 = 16MB 物理内存的页描述
@@ -289,15 +290,40 @@ __PDE:
 	 * 注意 0xe00000 物理地址是VBE模式下的平坦帧缓存（线性帧，64bit mode下的平坦Canonical线性地址）
 	 * 0xe00000 地址可在loader中通过ax = 4f02h 获取，在返回缓冲区偏移40B处
 	 */
-	.quad	0xe0000083
-	.quad	0xe0200083
-	.quad	0xe0400083
-	.quad	0xe0600083
-	.quad	0xe0800083
-	.quad	0xe0a00083
-	.quad	0xe0c00083
-	.quad	0xe0e00083
+	// .quad	0xe0000083
+	// .quad	0xe0200083
+	// .quad	0xe0400083
+	// .quad	0xe0600083
+	// .quad	0xe0800083
+	// .quad	0xe0a00083
+	// .quad	0xe0c00083
+	// .quad	0xe0e00083
+	// .fill	499, 8, 0	// 剩余 499 个页描述符号
+	
+	// 每张表占用2MB物理也，按2递增
+	// 前 5 x 2 = 10MB 物理内存的页描述
+	.quad	0x000087	//表0	// 83 -> 1000_0111 2MB物理页：用户模式、可读写、存在
+	.quad	0x200087	//表1	// 那么按照2MB物理也，指令的底21位将用来作为偏移量
+	.quad	0x400087	//表2	// 那么按照PML4E的描述符
+	.quad	0x600087	//表3	// 实际上 0x000083 描述符，将物理地址0x0 映射到	Canonical线性地址 的
+	.quad	0x800087	//表4	// 0x0和0xffff800000000000处
+
+
+	/* 后 8 x 2 = 16MB 物理内存的页描述
+	 * 0xe0000083 将物理地址 0xe0000000 映射到线性地址 0xa00000处（0xa00000的底21位作为偏移量）
+	 * 注意 0xe00000 物理地址是VBE模式下的平坦帧缓存（线性帧，64bit mode下的平坦Canonical线性地址）
+	 * 0xe00000 地址可在loader中通过ax = 4f02h 获取，在返回缓冲区偏移40B处
+	 */
+	.quad	0xe0000087
+	.quad	0xe0200087
+	.quad	0xe0400087
+	.quad	0xe0600087
+	.quad	0xe0800087
+	.quad	0xe0a00087
+	.quad	0xe0c00087
+	.quad	0xe0e00087
 	.fill	499, 8, 0	// 剩余 499 个页描述符号
+
 
 // 数据段，包括GDT表等
 .section .data 
@@ -306,17 +332,19 @@ __PDE:
 .global GDT_Table 
 
 /*注意，64位的系统断描述符变成了16B大小了*/
+// 按照sysenter/sysexit指令的段寻址方式，必须这样设置
 GDT_Table:
 	.quad	0x0000000000000000			/*0 null descriptor					0x00 */
 	.quad	0x0020980000000000			/*1 kernel code		64-bit	segment 0x08 */
 	.quad	0x0000920000000000			/*2 kernel data		64-bit	segment 0x10 */
-	.quad	0x0020f80000000000			/*3 user   code		64-bit	segment 0x18 */
-	.quad	0x0000f20000000000			/*4 user   data		64-bit	segment 0x20 */
-	.quad	0x00cf9a000000ffff			/*5 kernel code		32-bit	segment 0x28 */
-	.quad	0x00cf92000000ffff			/*6 kernel data		32-bit	segment 0x30 */
-	.quad	0x00cffa000000ffff			/*7 user   code		32-bit	segment 0x38 */
-	.quad	0x00cff2000000ffff			/*8 user   data		32-bit	segment 0x40 */
-	.fill	10, 8, 0					/*9~10  TSS任务状态段描述符，16B一个0x50 */
+	.quad	0x00cffa000000ffff			/*3 user   code		32-bit	segment 0x18 */
+	.quad	0x00cff2000000ffff			/*4 user   data		32-bit	segment 0x20 */
+	.quad	0x0020f80000000000			/*5 user   code		64-bit	segment 0x28 */
+	.quad	0x0000f20000000000			/*6 user   data		64-bit	segment 0x30 */
+	.quad	0x00cf9a000000ffff			/*7 kernel code		32-bit	segment 0x38 */
+	.quad	0x00cf92000000ffff			/*8 kernel data		32-bit	segment 0x40 */
+	// 保留一个8B的系统段描述符
+	.fill	10, 8, 0					/*10~11  TSS任务状态段描述符，16B一个0x50 */
 	/*这儿有 10x8/16 = 5个系统断描述符*/
 	// .fill repeat, {size}, {value}
 GDT_END:

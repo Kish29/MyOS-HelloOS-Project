@@ -37,6 +37,11 @@ extern unsigned long _stack_start;
 // 使用 entry.S 中的现场返回
 extern void ret_from_itrpt();
 
+// 使用 entry.S 中的系统调用返回入口
+extern void ret_from_system_call();
+
+extern void system_call();
+
 // 定义进程的状态标志
 #define TASK_RUNNING			(1 << 0) 
 #define TASK_INTERRUPTIBLE		(1 << 1)
@@ -286,5 +291,24 @@ inline void __switch_to(struct task_struct *prev, struct task_struct *next) {
 unsigned long do_fork(struct pt_regs *regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size);
 
 void task_init();
+
+#define	MAX_SYSTEM_CALL	128
+typedef unsigned long (*system_call_t)(struct pt_regs *regs);	// 定义传参为pt_regs *类型的函数指针
+
+unsigned long no_system_call(struct pt_regs *regs) {
+	color_printk(ONE_BLUE, BLACK, "no_system_call is calliing, NR:%#04x\n", regs->rax);
+	return - 1;
+}
+
+unsigned long sys_printf(struct pt_regs *regs) {
+	color_printk(BLACK, WHITE, (char *)regs->rdi);
+	return 1;
+}
+
+system_call_t system_call_table[MAX_SYSTEM_CALL] = {
+	[0] = no_system_call,
+	[1] = sys_printf,
+	[2 ... MAX_SYSTEM_CALL - 1] = no_system_call
+};
 
 #endif

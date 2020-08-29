@@ -234,17 +234,17 @@ void init_memory() {
 	// 在head.S中，第256项和第0项都被定义成0x102007
 	// 而用户所使用的线性地址为0x0000000 -> 0x00007fffff...，那么按照也表映射，去除0x0000的符号，0x0.. -> 0x7选择PML4的第0项到255项
 	// 所以，为了防止用户以及应用程序访问到内核的页表，需要将第一个置0，起保护作用
-	for(i = 0; i< 10; i++)
-		*(Physic_To_Virtual(Global_CR3 + i)) = 0UL;
+	// for(i = 0; i< 10; i++)
+	// 	*(Physic_To_Virtual(Global_CR3 + i)) = 0UL;
 
 	// 刷新TLB使其生效
 	flush_tlb();
 
-	color_printk(ONE_BLUE, BLACK, "After setting CR3 and flushing TLB\n");
-	color_printk(ONE_INDIGO, BLACK, "*0xffff800000101800:\t%#018lx\n", (*((unsigned long *)0xffff800000101800) & (~ 0xff)));
-	color_printk(ONE_INDIGO, BLACK, "*0xffff800000102000:\t%#018lx\n", (*((unsigned long *)0xffff800000102000) & (~ 0xff)));
-	color_printk(ONE_INDIGO, BLACK, "*0xffff800000103000:\t%#018lx\n", (*((unsigned long *)0xffff800000103000) & (~ 0xff)));
-	color_printk(ONE_INDIGO, BLACK, "*0xffff800000103028:\t%#018lx\n", (*((unsigned long *)0xffff800000103028) & (~ 0xff)));
+	// color_printk(ONE_BLUE, BLACK, "After setting CR3 and flushing TLB\n");
+	// color_printk(ONE_INDIGO, BLACK, "*0xffff800000101800:\t%#018lx\n", (*((unsigned long *)0xffff800000101800) & (~ 0xff)));
+	// color_printk(ONE_INDIGO, BLACK, "*0xffff800000102000:\t%#018lx\n", (*((unsigned long *)0xffff800000102000) & (~ 0xff)));
+	// color_printk(ONE_INDIGO, BLACK, "*0xffff800000103000:\t%#018lx\n", (*((unsigned long *)0xffff800000103000) & (~ 0xff)));
+	// color_printk(ONE_INDIGO, BLACK, "*0xffff800000103028:\t%#018lx\n", (*((unsigned long *)0xffff800000103028) & (~ 0xff)));
 }
 
 

@@ -83,6 +83,84 @@ ret_from_exception:
 ENTRY(ret_from_itrpt)
 	jmp	RESTORE_ALL  /* need rewrite */
 
+// 定义系统调用入口
+/*
+ * sysenter指令 不需要寄存器进行参数的保存
+ * IA32_SYSENTER_CS[15:0]-> 代码段 ， +8 -> 栈段 0x174
+ * IA32_SYSENTER_ESP    0x175
+ * IA32_SYSENTER_EIP	0x176
+ */
+ENTRY(system_call)
+	sti				// 注意，sysenter指令会复位IF标志位，使其进入系统调用后无法响应中断，所以要手动开启
+	subq	$0x38,	%rsp  // 跳过7个变量
+	cld
+
+	pushq	%rax 
+	movq	%es,	%rax 
+	pushq	%rax 
+	movq	%ds,	%rax 
+	pushq	%rax 
+	xorq	%rax,	%rax 
+
+	pushq	%rbp 
+	pushq	%rdi 
+	pushq	%rsi 
+	pushq	%rdx 
+	pushq	%rcx 
+	pushq	%rbx 
+	pushq	%r8 
+	pushq	%r9 
+	pushq	%r10
+	pushq	%r11
+	pushq	%r12
+	pushq	%r13
+	pushq	%r14
+	pushq	%r15
+
+	// set data segement selector 
+	movq	$0x10,	%rdx 
+	movq	%rdx,	%es 
+	movq	%rdx,	%ds 
+	movq	%rsp,	%rdi	// 将rsp作为第一个参数传给系统调用函数使用
+
+	callq	system_call_function
+
+
+/*
+ * sysexit 指令 rdx-> 返回时装载进rip中，
+ * rcx-> 返回时装载进rsp中
+ * 使用IA32_SYSENTER_CS这个MSR寄存器进行代码段和数据段的寻址
+ * value <- IA32_SYSENTER_CS[15:0] + 32，栈段选择子为代码段选择子+8
+ */
+
+
+// 定义系统调用返回入口
+ENTRY(ret_from_system_call)
+	movq	%rax,	0x80(%rsp)		// 保存返回值rax
+	popq	%r15
+	popq	%r14
+	popq	%r13
+	popq	%r12
+	popq	%r11
+	popq	%r10
+	popq	%r9
+	popq	%r8
+	popq	%rbx
+	popq	%rcx
+	popq	%rdx
+	popq	%rsi
+	popq	%rdi
+	popq	%rbp
+	popq	%rax
+	movq	%rax,	%ds
+	popq	%rax 
+	movq	%rax,	%es
+	popq	%rax					// 取出刚刚保存的返回值
+	addq	$0x38,	%rsp			// 跳过7个变量
+	.byte	0x48					// 使用sysexit指令默认返回到保护模式，如果要返回到64位，需要加.0x48的前缀
+	sysexit
+
+
 /*异常处理时，处理先自动压入原ss、sp，flags、cs、ip寄存器的值*/
 ENTRY(divide_error)
 	//除零错误没有错误码，含有错误码的异常处理器自动压栈

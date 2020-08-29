@@ -85,6 +85,8 @@ void cls_8024_kybd_buf();
 
 void show_rsp();
 
+void wrmsr(unsigned long address, unsigned long value);
+
 inline void list_init(struct _list *list) {
 	list->prev = list;
 	list->next = list;
@@ -492,5 +494,11 @@ void re_assign_rsp(unsigned long new_rsp) {
 }
 
 
+// 按照wrmsr指令的要求，数据应当由RDX(high 32bit):RAX(low 32bit)组成
+inline void wrmsr(unsigned long address, unsigned long value) {
+	__asm__	__volatile__	(
+				"wrmsr	\n\t"::"d"(value >> 32), "a"(value & 0xffffffff), "c"(address):"memory"
+			);
+}
 
 #endif
