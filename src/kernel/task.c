@@ -24,6 +24,19 @@ unsigned long system_call_function(struct pt_regs *regs) {
 
 void user_level_function() {
 	// color_printk(ONE_GREEN, ONE_RED, "user_level_function is running...\n");
+	long ret = 0;
+	char string[] = "Hello World!\n";
+
+	// 调用sys_printf函数
+	__asm__	__volatile__	(
+				"leaq	sysexit_return_address(%%rip),	%%rdx	\n\t"
+				"movq	%%rsp,	%%rcx	\n\t"
+				"sysenter	\n\t"
+				"sysexit_return_address:"
+				:"=a"(ret)
+				:"0"(1), "D"(string)
+				:"memory"
+			);
 
 	while(1);
 }
@@ -35,8 +48,8 @@ unsigned long do_execve(struct pt_regs * regs) {
 	regs->rcx = 0xa00000;	// rcx->rsp		// 2MB物理页
 	// 返回值
 	regs->rax = 1;
-	regs->es = 0;
-	regs->ds = 0;		// 用户数据段
+	regs->es = 0x30;
+	regs->ds = 0x30;		// 用户数据段
 
 	color_printk(ONE_GREEN, BLACK, "do_execve task is running...\n");
 
@@ -202,9 +215,9 @@ void task_init() {
 	init_mm.start_stack = _stack_start;		// defined in head.S
 
 	// 为系统调用的两个指令sysenter/sysexit设置MSR寄存器组
-	wrmsr(0x174, KERNEL_CS);
-	wrmsr(0x175, current->thread->rsp);
-	wrmsr(0x176, (unsigned long)system_call);
+	wrmsr(0x174, KERNEL_CS);		// 代码段选择子和栈段选择子
+	wrmsr(0x175, current->thread->rsp);			// rsp
+	wrmsr(0x176, (unsigned long)system_call);	// rip
 
 
 	// 初始化为init进程的tss表
