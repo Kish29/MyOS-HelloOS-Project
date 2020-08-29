@@ -25,7 +25,7 @@ unsigned long system_call_function(struct pt_regs *regs) {
 void user_level_function() {
 	// color_printk(ONE_GREEN, ONE_RED, "user_level_function is running...\n");
 	long ret = 0;
-	char string[] = "Hello World!\n";
+	char string[] = "This function is in USER privilege, and I'll say: Hello World!\n";
 
 	// 调用sys_printf函数
 	__asm__	__volatile__	(
