@@ -3,7 +3,8 @@
 dd if=boot.bin of=../../boot.img bs=512 count=1 conv=notrunc
 
 # mount boot.img 
-mount -t vfat /root/Projects/HelloOS/boot.img /media/root/OSImage -o loop # -o loop 把文件描述成磁盘分区
+# -o loop describe the file as a valid disk partition.
+mount -t vfat /root/Projects/HelloOS/boot.img /media/root/OSImage -o loop 
 
 cp loader.bin /media/root/OSImage 
 sync 
